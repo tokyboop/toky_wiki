@@ -100,6 +100,26 @@ Dashboard 展示多选一
 
 ---
 
+## 用 Claude Code 能复刻吗？
+
+| 能力 | 主脑(OpenCode) | Claude Code |
+|------|---------------|-------------|
+| 持久记忆 | ✅ | ✅ 靠 `_index.md` |
+| 后置链自动触发 | ✅ | ✅ 靠 `CLAUDE.md` |
+| 后台 Agent 异步跑 | ✅ API控制 | ❌ 手动触发 |
+| 定时任务 | ✅ | ⚠️ 要配 Windows 计划任务 |
+
+**核心差距只有一个**：后台 Agent 异步执行——CC 不在你面前就不动。
+
+**用 API 方式为什么能解决**：OpenCode 是常驻服务，程序可以随时调用，不需要人在场。如果部署到云服务器，即使关机也能跑。
+
+**CC 用户的最小可行方案**：
+- `_index.md` 放在 GitHub（跨设备同步）
+- 全局 `CLAUDE.md` 写启动/结束规则
+- 对话结束说"先到这" → AI 自动更新 `_index.md`
+
+---
+
 ## 和 echo-scheduler 的关系
 
 | | echo-scheduler | 主脑 MasterMind |
