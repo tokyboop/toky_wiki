@@ -36,10 +36,10 @@ if (Test-Path "$source\skills") {
 }
 
 # 同步 hooks
+$hooksDir = "$scriptDir\hooks"
+New-Item -ItemType Directory -Force -Path $hooksDir | Out-Null
 Get-ChildItem "$source\*.sh" -ErrorAction SilentlyContinue | ForEach-Object {
   $hookName = $_.Name
-  $hooksDir = "$scriptDir\hooks"
-  New-Item -ItemType Directory -Force -Path $hooksDir | Out-Null
   $diff = Compare-Object (Get-Content $_.FullName) (Get-Content "$hooksDir\$hookName" -ErrorAction SilentlyContinue) -ErrorAction SilentlyContinue
   if ($diff) {
     Copy-Item $_.FullName "$hooksDir\$hookName" -Force

@@ -37,10 +37,10 @@ if [ -d "$SOURCE/skills" ]; then
 fi
 
 # 同步 hooks
+mkdir -p "$SCRIPT_DIR/hooks"
 for hook_file in "$SOURCE"/*.sh; do
   [ -f "$hook_file" ] || continue
   hook_name="$(basename "$hook_file")"
-  mkdir -p "$SCRIPT_DIR/hooks"
   if ! diff -q "$hook_file" "$SCRIPT_DIR/hooks/$hook_name" >/dev/null 2>&1; then
     cp "$hook_file" "$SCRIPT_DIR/hooks/$hook_name"
     echo "✓ hook: $hook_name 已更新"
@@ -56,7 +56,7 @@ fi
 # commit + push
 cd "$REPO_DIR"
 git add setup/
-git commit -m "sync-back: 从本地同步配置更新"
+git diff --cached --quiet || git commit -m "sync-back: 从本地同步配置更新"
 BRANCH=$(git branch --show-current)
 git push -u origin "$BRANCH"
 echo ">>> 已提交并推送到 $BRANCH"
