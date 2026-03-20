@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    {
+      "name": "ralph-loop",
+      "url": "https://claude.com/plugins/ralph-loop"
+    }
+  ]
+}
