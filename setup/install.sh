@@ -19,4 +19,14 @@ for skill_dir in "$SCRIPT_DIR/skills"/*/; do
   echo "    ✓ $skill_name"
 done
 
+echo ">>> 安装 hooks..."
+if [ -d "$SCRIPT_DIR/hooks" ]; then
+  for hook_file in "$SCRIPT_DIR/hooks"/*.sh; do
+    [ -f "$hook_file" ] || continue
+    cp "$hook_file" "$TARGET/$(basename "$hook_file")"
+    chmod +x "$TARGET/$(basename "$hook_file")"
+    echo "    ✓ $(basename "$hook_file")"
+  done
+fi
+
 echo ">>> 完成。已同步到 $TARGET"
