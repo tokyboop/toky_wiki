@@ -2,10 +2,8 @@
 # 读取 stdin（UserPromptSubmit hook 会传 JSON）
 INPUT=$(cat)
 
-# 计数文件
-COUNTER_FILE="${TMPDIR:-/tmp}/.claude_msg_count_$$"
 # 用 session_id 做隔离
-SESSION_ID=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('session_id','default'))" 2>/dev/null || echo "default")
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "default"' 2>/dev/null || echo "default")
 COUNTER_FILE="/tmp/.claude_msg_${SESSION_ID}"
 
 # 读取并递增
