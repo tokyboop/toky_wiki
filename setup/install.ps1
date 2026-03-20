@@ -15,4 +15,13 @@ Get-ChildItem "$scriptDir\skills" -Directory | ForEach-Object {
   Write-Host "    OK $skillName"
 }
 
+Write-Host ">>> 安装 hooks..."
+$hooksDir = "$scriptDir\hooks"
+if (Test-Path $hooksDir) {
+  Get-ChildItem "$hooksDir\*.sh" | ForEach-Object {
+    Copy-Item $_.FullName "$target\$($_.Name)" -Force
+    Write-Host "    OK $($_.Name)"
+  }
+}
+
 Write-Host ">>> 完成。已同步到 $target"
