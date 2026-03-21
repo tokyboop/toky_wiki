@@ -8,3 +8,6 @@
 - `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架（Skill→Marshal→Archon→Fleet）
 - `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表（review/test-gen/refactor/doc-gen 等）
 - `knowledge/fp-ops-roadmap.md` — FP：运营数据能力建设路线（7条优先级 + 决策记录）
+- `knowledge/producer-ai-system.md` — 制作人AI辅助系统：10Agent+5Skill+4层记忆全流程架构
+- `knowledge/four-layer-memory.md` — 四层记忆系统：L0原则→L1跨项目→L2项目→L3工作记忆 + 置信度体系
+- `knowledge/evoskill.md` — EvoSkill：三Agent进化循环自动发现可复用Skill（C4待审阅）
