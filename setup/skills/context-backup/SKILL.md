@@ -4,7 +4,7 @@ description: >
   对话记忆备份与精华提炼。用户说结束语或执行 /context-backup 时触发。
   包含两部分：(1) 更新 _index.md 保证下次对话续接；(2) 扫描对话提炼有价值内容，
   分类为 wiki / skill，脱敏后写入并推送 GitHub。
-  触发词：/context-backup、"先到这"、"结束"、"bye"、"收工"、"泡泡"、"bubble sync"、"同步一下"
+  触发词：/context-backup、"先到这"、"结束"、"bye"、"收工"、"bubble sync"、"同步一下"
 ---
 
 # Context Backup + Bubble Sync
@@ -129,7 +129,7 @@ push 失败时重试最多 4 次（等待 2s、4s、8s、16s）。
 
 - 用户执行 `/context-backup`
 - 用户说"先到这"、"结束"、"bye"、"收工"、"备份一下"
-- 用户说"泡泡"、"bubble sync"、"同步一下"、"总结同步"
+- 用户说"bubble sync"、"同步一下"、"总结同步"
 - 对话已很长时主动建议
 
 ## 注意
