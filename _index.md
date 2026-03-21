@@ -66,6 +66,7 @@
 - `knowledge/knowledge-base-rag.md` — 个人记忆宫殿（RAG）
 - `knowledge/holmes-architecture.md` — Holmes 三角色架构完整方案（含代码片段）
 - `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架（Skill→Marshal→Archon→Fleet）
+- `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表（review/test-gen/refactor/doc-gen 等）
 
 ## 记忆宫殿技术决策
 

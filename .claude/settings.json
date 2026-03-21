@@ -22,6 +22,30 @@
                     }
                 ]
             }
+        ],
+        "PreToolUse": [
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/protect-files.sh",
+                        "timeout": 5000
+                    }
+                ]
+            }
+        ],
+        "PostToolUseFailure": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/circuit-breaker.sh",
+                        "timeout": 5000
+                    }
+                ]
+            }
         ]
     },
     "permissions": {

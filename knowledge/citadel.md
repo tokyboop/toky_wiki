@@ -176,3 +176,43 @@ scripts/
 > "Built from running 198 autonomous agents across 32 fleet sessions on a production codebase. 27 postmortems worth of lessons baked into every hook and skill."
 
 这不是理论框架，是从大量实战中蒸馏出来的。每个 Hook、每个 Skill 背后都有具体的失败案例驱动。
+
+---
+
+## 我偷了什么（实践记录）
+
+### 已落地
+
+1. **Circuit Breaker hook** → `setup/hooks/circuit-breaker.sh`
+   - 注册到 `PostToolUseFailure` 事件
+   - 连续失败 3 次 → 警告 + 建议换思路
+   - 累计熔断 5 次 → 强制停下重想策略
+   - 状态文件按 session 隔离（`/tmp/.claude_circuit_breaker_${SESSION_ID}.json`）
+
+2. **Protect Files hook** → `setup/hooks/protect-files.sh`
+   - 注册到 `PreToolUse`（matcher: `Edit|Write`）
+   - 保护名单：`_index.md`、`setup/CLAUDE.md`、`.claude/settings.json`、`setup/hooks/`
+   - 匹配命中 → exit 2 阻止操作
+
+3. **Skill 速查表** → `knowledge/citadel-skills-catalog.md`
+   - 13 个 Skill 的触发词、流程、适用场景速查
+   - 需要时翻阅，看有没有现成思路
+
+### Discovery Brief 思路（待实践）
+
+Citadel 的 Fleet 用 discovery brief 在并行 agent 之间传递知识：
+- 每个 agent 完成后输出 HANDOFF block（原始发现）
+- `compress-discovery.cjs` 压缩到 ~500 token
+- 下一波 agent 启动时注入这些 brief
+
+**和我的 `_index.md` 的关系**：
+- `_index.md` = 跨会话的人类级别记忆（我在做什么、决策了什么）
+- discovery brief = 跨 agent 的机器级别记忆（发现了什么技术细节）
+- 如果未来我要跑多 agent 并行，可以参考这个模式：每个 agent 输出结构化摘要 → 压缩 → 注入下一个
+
+### Quality Gate 增强（待实践）
+
+当前 stop hook 只检查 unpushed commits。可以扩展：
+- 扫描改动文件中的反模式（hardcoded secrets、TODO、debug 语句）
+- 检查是否跑过测试
+- 自定义规则（从 `harness.json` 读取）
