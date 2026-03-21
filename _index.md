@@ -6,10 +6,8 @@
 
 ## 当前最重要的事
 
-1. **MemoryPalace 三角色架构升级**：方案已完整定稿，写进 `knowledge/holmes-architecture.md`，下一步直接写代码
-   - `retriever.py` 新增：`triage_and_decompose()` + `answer_holmes()` + `HOLMES_PERSONA` + `_extract_tag()`
-   - `bot.py` 新增路由逻辑 + `_build_holmes_embed()`
-2. 部署事项暂缓，等架构升级完再重新部署
+1. **FP 运营数据能力建设** — 异常监控告警方案已设计完，下一步写真实 SQL + Python 脚本
+2. **MemoryPalace 三角色架构升级** — 方案已定稿，等 FP 告完一段再继续
 
 ---
 
@@ -17,27 +15,32 @@
 
 **日期**：2026-03-21
 **当前项目路径**：`<LOCAL>/toky_wiki`（GitHub: `<USER>/toky_wiki`）
-**toky_wiki branch**：`main`
+**toky_wiki branch**：`claude/citadel-setup-U6O0d`
 
 **本次做了什么**：
-- 恢复上下文后处理 stop hook 报告的"8 unpushed commits on main"问题
-- 发现本地 main 与 origin/main 分叉：本地有旧的合并 commit，远端已通过 PR 合并了更新的版本（含 setup/hooks/、sync-back 脚本等）
-- `_index.md` 内容一致，本地 8 个旧 commit 的有效内容已被远端 PR 包含
-- 执行 `git reset --hard origin/main`，消除分叉，本地 main 与远端同步
 
-**结论**：
-- toky_wiki 初始化工作已全部完成并合并到 main
-- stop hook 不会再报 unpushed commit
+### Citadel hook 修复
+- protect-files hook 的 `exit 2` 是硬拦截，没有确认框，用户被挡住无法操作
+- hook 保护了自己（`setup/hooks/`），造成死锁
+- 修复：`exit 2` → 警告 + `exit 0`，依赖 Claude Code 自身权限弹窗
+- `_index.md` 从保护名单移除（工作记忆需要频繁写入）
 
-**下次继续**：
-- 转战 MemoryPalace，打开 `<LOCAL>/MemoryPalace`
-- 参考 `knowledge/holmes-architecture.md` 写代码
-- 入口：`retriever.py`
-  1. 新增 `HOLMES_PERSONA` 常量
-  2. 新增 `triage_and_decompose(question)`
-  3. 新增 `answer_holmes(question, sub_questions)` + `_extract_tag()`
-  4. 现有 `answer()` / `query()` 保持不动
-- 然后改 `bot.py`：路由逻辑 + `_build_holmes_embed()`
+### FP 异常监控告警方案设计
+- 写入 `knowledge/fp-ops-roadmap.md`
+- 5 种对比维度：日环比、周同比、月整体、活动期对比、历史活动对比
+- SQL 通用模板：当前值 vs 基线值 → 变化率 → 超阈值告警
+- 告警通道：飞书机器人 webhook
+- 执行管道：cron + Python 脚本（不用 echo-scheduler，那个是会话内定时）
+- 初版监控指标：DAU、道具消耗量、充值金额、新增用户数
+
+### FP 路线关键 insight
+- 7 条优先级已确认，第 1 条（活动 log）老活动推不动，新活动有机会再推
+- 先做 2-4（自己能控制的），不依赖研发改架构
+- 核心原则：**用现有数据把能做的先做扎实**
+
+**下次继续**（下周一）：
+- FP 异常监控：提供表名和字段 → 写真实 SQL → 写 Python 脚本 → 接飞书 webhook
+- 需要确认：数据库类型（MySQL/PG/CH）、表结构、先跑哪个指标
 
 ---
 
@@ -45,28 +48,30 @@
 
 | 项目 | 状态 | 本地路径 | 备注 |
 |------|------|---------|------|
+| FP 运营数据能力 | 告警方案设计完 | `<LOCAL>/toky_wiki` | 下周一写脚本 |
 | 记忆宫殿（221B） | 架构升级中 | `<LOCAL>/MemoryPalace` | GitHub: `<USER>/MemoryPalace` |
 | toky_wiki 知识库 | 进行中 | `<LOCAL>/toky_wiki` | GitHub: `<USER>/toky_wiki` |
-| 运营监控工具 | 维护中 | `<LOCAL>/MonitoringTool` | 见 MonitoringTool/ |
 
 ## 活跃 Branch
 
 | 仓库 | Branch | 任务 | 状态 |
 |------|--------|------|------|
-| `<USER>/toky_wiki` | `main` | wiki 初始化 | 已完成 ✓ |
-| `<USER>/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 下一步 |
+| `<USER>/toky_wiki` | `claude/citadel-setup-U6O0d` | hook 修复 + FP 告警设计 | 进行中 |
+| `<USER>/toky_wiki` | `main` | wiki 主干 | 已完成 ✓ |
+| `<USER>/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 暂缓 |
 
 ---
 
 ## 笔记索引
 
+- `knowledge/fp-ops-roadmap.md` — FP 运营数据能力建设路线（含异常监控方案）
 - `knowledge/distillation-sop.md` — 蒸馏方法论 SOP
 - `knowledge/echo-scheduler.md` — 多Agent调度系统
 - `knowledge/mastermind.md` — AI记忆操作系统
 - `knowledge/knowledge-base-rag.md` — 个人记忆宫殿（RAG）
 - `knowledge/holmes-architecture.md` — Holmes 三角色架构完整方案（含代码片段）
-- `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架（Skill→Marshal→Archon→Fleet）
-- `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表（review/test-gen/refactor/doc-gen 等）
+- `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架
+- `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表
 
 ## 记忆宫殿技术决策
 
