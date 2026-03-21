@@ -15,30 +15,23 @@
 
 ## 上次交接
 
-**日期**：2026-03-19
-**当前项目路径**：E:/ClaudeTask/MemoryPalace（GitHub: tokyboop/MemoryPalace）
-**toky_wiki branch**：`tokyboop/toky_wiki` → `claude/initial-setup-L1HUA`
+**日期**：2026-03-21
+**当前项目路径**：`<LOCAL>/toky_wiki`（GitHub: `<USER>/toky_wiki`）
+**toky_wiki branch**：`main`
 
 **本次做了什么**：
-- 讨论了 Holmes bot 的个人标签方案（不用访问控制，用人格印记）
-- 总结了主人的思维特征，写入 `HOLMES_PERSONA` 常量
-- 完整定稿三角色架构方案，写入 `knowledge/holmes-architecture.md`（含完整代码片段）
+- 恢复上下文后处理 stop hook 报告的"8 unpushed commits on main"问题
+- 发现本地 main 与 origin/main 分叉：本地有旧的合并 commit，远端已通过 PR 合并了更新的版本（含 setup/hooks/、sync-back 脚本等）
+- `_index.md` 内容一致，本地 8 个旧 commit 的有效内容已被远端 PR 包含
+- 执行 `git reset --hard origin/main`，消除分叉，本地 main 与远端同步
 
-**已确认的架构决策**：
-- 整体人设全部是福尔摩斯，不引入华生角色
-- 三个动作：**评估**（triage+decompose合并1次LLM）→ **检索**（向量搜索，纯工具）→ **作答**（Holmes风格，速答/深度推理两种输出）
-- 复杂路径：拆子问题 → 并行 query() → 去重合并 top8 → Holmes 显示推理链+结论
-- 推理+结论：**1次LLM调用**，prompt 规定 `<推理>...</推理><结论>...</结论>` 格式
-- 评估调用：**1次LLM调用**，返回 JSON `{"mode": "quick"|"deep", "sub_questions": [...]}`
-- **人格印记**：`HOLMES_PERSONA` 里嵌入主人思维习惯（根本问题驱动、层次结构、对比表格、最小可行方案、蒸馏密度），别人 clone 代码 Holmes 会"读不懂他们"
-
-**主人思维特征摘要（供后续对话参考）**：
-- 先找根本问题再建框架；系统化+层次感；信息流转思维
-- 执念于"不用人手动维护"；对比表格作为思维工具
-- 蒸馏思维（提炼本质，不复制原文）；务实克制（最小可行方案优先）
+**结论**：
+- toky_wiki 初始化工作已全部完成并合并到 main
+- stop hook 不会再报 unpushed commit
 
 **下次继续**：
-- 直接打开 `E:/ClaudeTask/MemoryPalace`，参考 `knowledge/holmes-architecture.md` 写代码
+- 转战 MemoryPalace，打开 `<LOCAL>/MemoryPalace`
+- 参考 `knowledge/holmes-architecture.md` 写代码
 - 入口：`retriever.py`
   1. 新增 `HOLMES_PERSONA` 常量
   2. 新增 `triage_and_decompose(question)`
@@ -60,7 +53,7 @@
 
 | 仓库 | Branch | 任务 | 状态 |
 |------|--------|------|------|
-| `<USER>/toky_wiki` | `claude/initial-setup-L1HUA` | wiki 初始化 + Holmes 方案 | 进行中 |
+| `<USER>/toky_wiki` | `main` | wiki 初始化 | 已完成 ✓ |
 | `<USER>/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 下一步 |
 
 ---
