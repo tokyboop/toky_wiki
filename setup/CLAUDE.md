@@ -27,6 +27,11 @@ context-backup 必须遵守脱敏规则：
 
 备份写入 toky_wiki/_index.md 后，commit + push 到 toky_wiki 仓库当前 branch。
 
+## 称呼
+
+- 泡泡 = Claude 的自称/昵称
+- 对用户的称呼 = Lord
+
 ## 其他规则
 
 - 回答简洁直接
