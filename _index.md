@@ -8,47 +8,36 @@
 
 1. **FP 运营数据能力建设** — 异常监控告警方案已设计完，下周一提供表结构后写真实 SQL + Python 脚本
 2. **MemoryPalace 三角色架构升级** — 方案已定稿，等 FP 告警告一段再继续
+3. **Skill 体系增强** — 两个待做改进：① context-backup 加格式类型判断（md/md+code/script）② skill提炼前加 scaffold 模板参考步骤
 
 ---
 
 ## 上次交接
 
-**日期**：2026-03-21
+**日期**：2026-03-25
 **当前项目路径**：`<LOCAL>/toky_wiki`（GitHub: `<USER>/toky_wiki`）
-**toky_wiki branch**：`claude/citadel-setup-U6O0d`
+**toky_wiki branch**：`claude/enhance-skill-extraction-B4vJ2`
 
 **本次做了什么**：
 
-### Citadel hook 修复
-- protect-files hook 的 `exit 2` 是硬拦截，没有确认框
-- hook 保护了自己（`setup/hooks/`），造成死锁
-- 修复：`exit 2` → 警告 + `exit 0`，依赖 Claude Code 自身权限弹窗
-- `_index.md` 从保护名单移除
+### Skill 格式分类讨论
+- 识别出 skill 提炼固定输出纯 MD 是个缺口
+- 定义三种格式类型：a. 纯 MD（思维/判断型）b. MD+代码（流程型）c. 脚本为主+少量 MD（执行型）
+- 改进方案：SKILL.md frontmatter 加 `type` 字段，提炼时按类型决定是否生成 .sh/.py
 
-### Skill 体系整合
-- 合并 bubble-sync 到 context-backup（记忆续接 + 精华提炼合一）
-- 新建 skill-vetter（第三方代码六项安全审查）
-- 新建 fp skill（第一性原理五问自检，触发词 `fp`）
-- 从 `<USER>/claude-skills` 仓库迁移整合
+### Citadel 改造为 Agent 工程构建工具
+- 分析现有体系已吸收 Citadel 一半：barrel export ↔ _index.md、/marshal ↔ context-backup 等
+- 识别真正缺口：`/scaffold` 没有 agent 版本 → 新 skill 提炼前应先扫描已有 SKILL.md 当模板
+- 改造优先级：格式分类 → scaffold 模板参考 → Citadel skill 改写（可选）
 
-### 称呼规则
-- 泡泡 = Claude 的自称/昵称（不是触发词）
-- 对用户称呼 = Lord
+### Wiki & README 更新
+- 新建 `knowledge/skill-type-and-agent-engineering.md`（以上两个分析的完整记录）
+- 更新 `knowledge/_catalog.md` 加入新索引
+- 更新 `README.md`：补充 knowledge/、.claude/ 集成、Skill 清单、指向 _catalog.md
 
-### FP 异常监控告警方案设计
-- 5 种对比维度：日环比、周同比、月整体、活动期对比、历史活动对比
-- SQL 通用模板：当前值 vs 基线值 → 变化率 → 超阈值告警
-- 告警通道：飞书机器人 webhook
-- 执行管道：cron + Python 脚本
-- 初版监控指标：DAU、道具消耗量、充值金额、新增用户数
-
-### 运营 insight
-- 7 条优先级已确认，第 1 条（活动 log）老活动推不动
-- 先做 2-4（自己能控制的），不依赖研发改架构
-
-**下次继续**（下周一）：
-- FP 异常监控：Lord 提供表名和字段 → 写真实 SQL → 写 Python 脚本 → 接飞书 webhook
-- 需要确认：数据库类型（MySQL/PG/CH）、表结构、先跑哪个指标
+**下次继续**：
+- 实际修改 context-backup SKILL.md，加入格式类型判断逻辑（第 6 步）
+- FP 异常监控：等 Lord 提供表名和字段 → 写真实 SQL → Python 脚本 → 飞书 webhook
 
 ---
 
@@ -64,8 +53,8 @@
 
 | 仓库 | Branch | 任务 | 状态 |
 |------|--------|------|------|
-| `<USER>/toky_wiki` | `claude/citadel-setup-U6O0d` | hook 修复 + skill 整合 + FP 告警 | 进行中 |
-| `<USER>/toky_wiki` | `main` | wiki 主干 | 已完成 ✓ |
+| `<USER>/toky_wiki` | `claude/enhance-skill-extraction-B4vJ2` | skill格式分类 + Citadel改造 + README更新 | 进行中 |
+| `<USER>/toky_wiki` | `main` | wiki 主干 | 稳定 |
 | `<USER>/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 暂缓 |
 
 ---
@@ -89,6 +78,7 @@
 - `knowledge/holmes-architecture.md` — Holmes 三角色架构完整方案
 - `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架
 - `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表
+- `knowledge/skill-type-and-agent-engineering.md` — Skill 格式三分类 + Citadel 改造为 agent 工程构建工具
 
 ## 记忆宫殿技术决策
 
