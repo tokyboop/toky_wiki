@@ -59,6 +59,39 @@ description: >
 
 保留其他区域（活跃项目、笔记索引等），按需更新。
 
+### 4b. 更新项目 FOCUS.md（焦点快照）
+
+在 `toky_wiki/focus/<项目名>.md` 中同步更新当前项目的焦点快照。
+**项目名** = 当前工作目录的 basename（如 `MemoryPalace`、`toky_wiki`）。
+
+文件路径：`<toky_wiki根目录>/focus/<项目名>.md`
+
+文件结构（严格保持 < 50 行）：
+
+```markdown
+# <项目名> — FOCUS
+_上次更新：YYYY-MM-DD_
+
+**当前目标**：<本阶段目标，1句话>
+
+## 当前状态
+- <进展到哪了>
+
+## 关键决策
+- <已定的技术/产品选择>
+
+## 活跃 Branch
+- `<USER>/<repo>` → `<branch>`
+
+## 下次入口
+1. <下一步具体操作>
+
+## 绝对不忘
+- <容易遗漏的关键信息>
+```
+
+如文件不存在则创建。执行脱敏（路径、用户名等同 _index.md 规则）。
+
 ---
 
 ## 第二部分：对话精华提炼（Bubble Sync）
@@ -97,7 +130,7 @@ description: >
 ### 7. commit + push
 
 ```
-git add _index.md knowledge/ setup/skills/
+git add _index.md focus/ knowledge/ setup/skills/
 git commit -m "backup: <一句话描述本次对话内容>"
 git push -u origin <当前branch>
 ```
@@ -111,6 +144,7 @@ push 失败时重试最多 4 次（等待 2s、4s、8s、16s）。
 
 **记忆续接：**
 - 更新了 _index.md，下次交接入口：<具体说明>
+- 更新了 focus/<项目名>.md
 
 **精华提炼：**
 - [wiki] `knowledge/<文件名>` — <一句话说明>
