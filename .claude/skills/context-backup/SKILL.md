@@ -2,27 +2,26 @@
 name: context-backup
 description: >
   对话记忆备份与精华提炼。用户说结束语或执行 /context-backup 时触发。
-  包含两部分：(1) 更新 _index.md 保证下次对话续接；(2) 扫描对话提炼有价值内容，
+  包含两部分：(1) 更新 PrivateSet/memory/_index.md 保证下次对话续接；(2) 扫描对话提炼有价值内容，
   分类为 wiki / skill，脱敏后写入并推送 GitHub。
   触发词：/context-backup、"先到这"、"结束"、"bye"、"收工"、"bubble sync"、"同步一下"
 ---
 
 # Context Backup + Bubble Sync
 
-两件事合一条命令：**续接记忆 + 精华沉淀**。
+两件事合一条命令：**续接记忆 + 精华沉淠**。
 
 ---
 
-## 第一部分：工作记忆续接（_index.md）
+## 第一部分：工作记忆续接（PrivateSet/memory/）
 
-### 1. 定位 toky_wiki
+### 1. 定位 PrivateSet/memory
 
 按顺序尝试：
-1. `E:/ClaudeTask/toky_wiki/_index.md`
-2. `/home/user/toky_wiki/_index.md`
-3. `~/toky_wiki/_index.md`
-
-找到后读取，了解上次状态。
+1. `E:/ClaudeTask/PrivateSet/memory`
+2. `/home/user/PrivateSet/memory`
+3. `~/PrivateSet/memory`
+4. `${PRIVATESET_PATH}/memory`（环境变量）
 
 ### 2. 提取本次对话要点
 
@@ -61,10 +60,8 @@ description: >
 
 ### 4b. 更新项目 FOCUS.md（焦点快照）
 
-在 `toky_wiki/focus/<项目名>.md` 中同步更新当前项目的焦点快照。
+在 `PrivateSet/memory/focus/<项目名>.md` 中同步更新当前项目的焦点快照。
 **项目名** = 当前工作目录的 basename（如 `MemoryPalace`、`toky_wiki`）。
-
-文件路径：`<toky_wiki根目录>/focus/<项目名>.md`
 
 文件结构（严格保持 < 50 行）：
 
@@ -104,22 +101,17 @@ _上次更新：YYYY-MM-DD_
 - **踩坑 / 错误修复**：遇到的问题和解决方案，尤其是不明显的 root cause
 - **业务规则 / 定义**：业务逻辑、字段含义、计算公式等确认事项
 - **工具配置**：安装路径、环境变量、依赖关系等
-- **决策结论**：用户明确拍板的选择（"我们用X不用Y，因为..."）
-- **可复用流程**：如果某套步骤将来还会重复，就是潜在的 skill
+- **决策结论**：用户明确拍板的选择
+- **可复用流程**：将来还会重复的操作步骤
 
 如果对话主要是闲聊、或没有新的可操作知识——跳过这部分，只做第一部分的记忆续接。
 
-### 6. 分类并写入
+### 6. 分类并写入 toky_wiki
 
 | 类型 | 判断标准 | 写到哪里 |
-|------|---------|---------|
+|------|---------|----------|
 | **skill** | 可复用的多步骤操作流程，将来会反复用 | `toky_wiki/setup/skills/<name>/SKILL.md` |
 | **wiki** | 学习总结、踩坑记录、技术笔记、方案设计 | `toky_wiki/knowledge/<topic>.md` |
-
-**判断原则**：
-- 有明确步骤、将来会重复的流程 → skill
-- 综合性总结、知识点、方案 → wiki（写入 `knowledge/` 并更新 `_catalog.md`）
-- 不确定分类 → wiki，包容性最强
 
 写入前同样执行脱敏处理。
 
@@ -127,34 +119,44 @@ _上次更新：YYYY-MM-DD_
 
 ## 第三部分：提交推送
 
-### 7. commit + push
+### 7. 先推 PrivateSet（工作记忆）
 
-```
-git add _index.md focus/ knowledge/ setup/skills/
+```bash
+cd <PrivateSet 路径>
+git add memory/
 git commit -m "backup: <一句话描述本次对话内容>"
 git push -u origin <当前branch>
 ```
 
-push 失败时重试最多 4 次（等待 2s、4s、8s、16s）。
+### 8. 再推 toky_wiki（知识提炼，如有）
 
-### 8. 输出同步摘要
+```bash
+cd <toky_wiki 路径>
+git add knowledge/ setup/skills/
+git commit -m "knowledge: <一句话描述>"
+git push -u origin <当前branch>
+```
+
+push 失败时重试最多 4 次（等待2s、4s、8s、16s）。
+
+### 9. 输出同步摘要
 
 ```
 ### 备份完成
 
-**记忆续接：**
+**记忆续接（PrivateSet/memory/）：**
 - 更新了 _index.md，下次交接入口：<具体说明>
 - 更新了 focus/<项目名>.md
 
-**精华提炼：**
+**精华提炼（toky_wiki/）：**
 - [wiki] `knowledge/<文件名>` — <一句话说明>
 - [skill] `<skill名>` — <一句话说明>
-- （或：本次对话无新增可沉淀内容）
+- （或：本次对话无新增可沉淠内容）
 
 **脱敏处理：**
 - <具体脱敏了什么>
 
-**推送：** ✅ 已推送到 <branch>
+**推送：** ✅ PrivateSet 已推送到 <branch>
 ```
 
 ---
