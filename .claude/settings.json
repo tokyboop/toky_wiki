@@ -1,53 +1,5 @@
 {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
-    "hooks": {
-        "UserPromptSubmit": [
-            {
-                "matcher": "",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "~/.claude/context-remind.sh"
-                    }
-                ]
-            }
-        ],
-        "Stop": [
-            {
-                "matcher": "",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "~/.claude/stop-hook-git-check.sh"
-                    }
-                ]
-            }
-        ],
-        "PreToolUse": [
-            {
-                "matcher": "Edit|Write",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "~/.claude/protect-files.sh",
-                        "timeout": 5000
-                    }
-                ]
-            }
-        ],
-        "PostToolUseFailure": [
-            {
-                "matcher": "",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "~/.claude/circuit-breaker.sh",
-                        "timeout": 5000
-                    }
-                ]
-            }
-        ]
-    },
     "permissions": {
         "allow": ["Skill"]
     }
