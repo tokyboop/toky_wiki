@@ -45,9 +45,9 @@
 
 | 项目 | 状态 | 本地路径 | 备注 |
 |------|------|---------|------|
-| FP 运营数据能力 | 告警方案设计完 | `<LOCAL>/toky_wiki` | 下周一写脚本 |
-| 记忆宫殿（221B） | 架构升级中 | `<LOCAL>/MemoryPalace` | GitHub: `<USER>/MemoryPalace` |
-| toky_wiki 知识库 | 进行中 | `<LOCAL>/toky_wiki` | GitHub: `<USER>/toky_wiki` |
+| 记忆宫殿（221B） | 架构升级中 | `E:/ClaudeTask/MemoryPalace` | GitHub: `tokyboop/MemoryPalace` |
+| toky_wiki 知识库 | 进行中 | `E:/ClaudeTask/toky_wiki` | GitHub: `tokyboop/toky_wiki` |
+| 运营监控工具 | 维护中 | `E:/ClaudeTask/MonitoringTool` | 见 MonitoringTool/ |
 
 ## 活跃 Branch
 
@@ -59,18 +59,8 @@
 
 ---
 
-## Skill 清单
-
-| Skill | 触发词 | 作用 |
-|-------|--------|------|
-| context-backup | "先到这"、"结束"、"同步一下" | 记忆续接 + 精华提炼 |
-| fp | `fp` | 第一性原理五问自检 |
-| skill-vetter | "安装"、"install"、"这个安全吗" | 第三方代码安全审查 |
-| update-rule | "加一条规则" | 向 CLAUDE.md 写入规则 |
-
 ## 笔记索引
 
-- `knowledge/fp-ops-roadmap.md` — 运营数据能力建设路线（含异常监控方案）
 - `knowledge/distillation-sop.md` — 蒸馏方法论 SOP
 - `knowledge/echo-scheduler.md` — 多Agent调度系统
 - `knowledge/mastermind.md` — AI记忆操作系统
@@ -82,10 +72,10 @@
 
 ## 记忆宫殿技术决策
 
-- 向量存储：numpy+pickle（非 ChromaDB）
+- 向量存储：numpy+pickle（非 ChromaDB，避免 C++ 编译依赖）
 - Embedding：text-embedding-3-small（OpenAI 兼容，apiyi.com 转发）
 - 生成：gpt-4o-mini（同上）
 - 查询入口：Discord Bot（跨设备）
-- 脱敏：config.yaml 里的 sensitive_keywords 过滤
-- 部署：朋友的服务器（CentOS 9）
-- GitHub 仓库：`<USER>/MemoryPalace`
+- 脱敏：config.yaml 里的 sensitive_keywords 过滤 Claude 对话导出
+- 部署：朋友的服务器（CentOS 9），接力文档 DEPLOY.md
+- GitHub 仓库：`tokyboop/MemoryPalace`
