@@ -6,32 +6,38 @@
 
 ## 当前最重要的事
 
-1. **MemoryPalace 三角色架构升级**：方案已完整定稿，写进 `knowledge/holmes-architecture.md`，下一步直接写代码
-   - `retriever.py` 新增：`triage_and_decompose()` + `answer_holmes()` + `HOLMES_PERSONA` + `_extract_tag()`
-   - `bot.py` 新增路由逻辑 + `_build_holmes_embed()`
-2. **Holmes KB 设计**：记住两个必问问题（范围过滤标签 + 冷启动时明确区分推理vs记忆）
-3. 部署事项暂缓，等架构升级完再重新部署
+1. **FP 运营数据能力建设** — 异常监控告警方案已设计完，下周一提供表结构后写真实 SQL + Python 脚本
+2. **MemoryPalace 三角色架构升级** — 方案已定稿，等 FP 告警告一段再继续
+3. **Skill 体系增强** — 两个待做改进：① context-backup 加格式类型判断（md/md+code/script）② skill提炼前加 scaffold 模板参考步骤
 
 ---
 
 ## 上次交接
 
-**日期**：2026-03-27
-**当前项目路径**：E:/ClaudeTask（主要在 claude-skills + toky_wiki + PrivateSet）
+**日期**：2026-03-25
+**当前项目路径**：`<LOCAL>/toky_wiki`（GitHub: `<USER>/toky_wiki`）
+**toky_wiki branch**：`claude/enhance-skill-extraction-B4vJ2`
 
 **本次做了什么**：
-- 拆解了外部 prompt-master + material-analyst 双 Agent 包
-- 总结成设计模式文档：`toky_wiki/knowledge/agent-skill-design-patterns.md`
-- 创建 skill 编写思路清单：`claude-skills/SKILL_WRITING_GUIDE.md`
-- 给 4 个 skill 全部加了演化日志（skill-vetter、bubble-sync、sql-helper、weekly-monitor）
-- 沉淀了多条 memory（演化日志习惯、先列优缺点、输出格式固化、checklist来自踩坑、RAG两个必问问题、端到端自检、诚实性规则写进全局CLAUDE.md）
-- 把 Claude 配置文件（CLAUDE.md、settings.json、3个.sh hook）备份到 PrivateSet
-- 完善了换设备恢复步骤文档
+
+### Skill 格式分类讨论
+- 识别出 skill 提炼固定输出纯 MD 是个缺口
+- 定义三种格式类型：a. 纯 MD（思维/判断型）b. MD+代码（流程型）c. 脚本为主+少量 MD（执行型）
+- 改进方案：SKILL.md frontmatter 加 `type` 字段，提炼时按类型决定是否生成 .sh/.py
+
+### Citadel 改造为 Agent 工程构建工具
+- 分析现有体系已吸收 Citadel 一半：barrel export ↔ _index.md、/marshal ↔ context-backup 等
+- 识别真正缺口：`/scaffold` 没有 agent 版本 → 新 skill 提炼前应先扫描已有 SKILL.md 当模板
+- 改造优先级：格式分类 → scaffold 模板参考 → Citadel skill 改写（可选）
+
+### Wiki & README 更新
+- 新建 `knowledge/skill-type-and-agent-engineering.md`（以上两个分析的完整记录）
+- 更新 `knowledge/_catalog.md` 加入新索引
+- 更新 `README.md`：补充 knowledge/、.claude/ 集成、Skill 清单、指向 _catalog.md
 
 **下次继续**：
-- 打开 `E:/ClaudeTask/MemoryPalace`，参考 `knowledge/holmes-architecture.md` 写代码
-- 入口：`retriever.py`，按顺序新增 `HOLMES_PERSONA` → `triage_and_decompose()` → `answer_holmes()` + `_extract_tag()`
-- 然后改 `bot.py`：路由逻辑 + `_build_holmes_embed()`
+- 实际修改 context-backup SKILL.md，加入格式类型判断逻辑（第 6 步）
+- FP 异常监控：等 Lord 提供表名和字段 → 写真实 SQL → Python 脚本 → 飞书 webhook
 
 ---
 
@@ -47,8 +53,9 @@
 
 | 仓库 | Branch | 任务 | 状态 |
 |------|--------|------|------|
-| `tokyboop/toky_wiki` | `main` | wiki 知识沉淀 | 进行中 |
-| `tokyboop/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 下一步 |
+| `<USER>/toky_wiki` | `claude/enhance-skill-extraction-B4vJ2` | skill格式分类 + Citadel改造 + README更新 | 进行中 |
+| `<USER>/toky_wiki` | `main` | wiki 主干 | 稳定 |
+| `<USER>/MemoryPalace` | 待开 | Holmes 三角色架构实现 | 暂缓 |
 
 ---
 
@@ -58,8 +65,10 @@
 - `knowledge/echo-scheduler.md` — 多Agent调度系统
 - `knowledge/mastermind.md` — AI记忆操作系统
 - `knowledge/knowledge-base-rag.md` — 个人记忆宫殿（RAG）
-- `knowledge/holmes-architecture.md` — Holmes 三角色架构完整方案（含代码片段）
-- `knowledge/agent-skill-design-patterns.md` — Agent/Skill 设计模式参考（2026-03-27新增）
+- `knowledge/holmes-architecture.md` — Holmes 三角色架构完整方案
+- `knowledge/citadel.md` — Citadel：Claude Code 四级智能编排框架
+- `knowledge/citadel-skills-catalog.md` — Citadel 13个 Skill 速查表
+- `knowledge/skill-type-and-agent-engineering.md` — Skill 格式三分类 + Citadel 改造为 agent 工程构建工具
 
 ## 记忆宫殿技术决策
 
