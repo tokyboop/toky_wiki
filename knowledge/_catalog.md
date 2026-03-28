@@ -13,3 +13,4 @@
 - `knowledge/evoskill.md` — EvoSkill：三Agent进化循环自动发现可复用Skill（C4待审阅）
 - `knowledge/skill-type-and-agent-engineering.md` — Skill 格式三分类（纯MD/MD+代码/脚本为主）+ Citadel 改造为 agent 工程构建工具的分析与方案
 - `knowledge/harness-design.md` — Harness 设计框架：三层按需取用（L1进度记忆/L2独立评估/L3先规划再执行），来源 Anthropic 工程博客
+- `knowledge/anthropic-harness-design-long-running-apps.md` — Anthropic 长时运行 Harness 蒸馏：三个痛点+三个改进+结果对比
