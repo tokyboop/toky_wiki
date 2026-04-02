@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>咖啡的艺术-长文</title>
+  <style>
+    /* ── Variables (warm 主题) ── */
+    :root {
+      --bg-body: #f7f3ee;
+      --bg-slide-dark: #3a2e28;
+      --bg-slide-light: #f7f3ee;
+      --accent: #c4956a;
+      --text-dark: #f5efe6;
+      --text-dark-muted: rgba(245,239,230,0.5);
+      --text-light: #3a3530;
+      --text-light-muted: #8a7e72;
+      --bg-chrome: #f0ebe4;
+      --bg-chrome-hover: #e8e0d6;
+      --border-chrome: #d5cfc6;
+      --text-chrome: #3a3530;
+      --text-chrome-muted: #8a7e72;
+      --font-stack: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-body);
+      padding-top: 70px;
+      font-family: var(--font-stack);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ── Toolbar ── */
+    .export-toolbar {
+      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+      background: var(--bg-chrome); display: flex; justify-content: center;
+      align-items: center; gap: 16px; z-index: 1000;
+      border-bottom: 1px solid var(--border-chrome);
+    }
+    .btn {
+      padding: 8px 16px; border-radius: 4px; font-size: 14px;
+      font-weight: 500; cursor: pointer; border: none; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary { background: var(--bg-chrome-hover); color: var(--text-chrome); border: 1px solid var(--border-chrome); }
+    .btn-secondary:hover { background: var(--border-chrome); }
+    .progress-text {
+      color: var(--text-chrome-muted); font-size: 12px; min-width: 120px; text-align: center;
+    }
+
+    /* ── Long Canvas ── */
+    .long-canvas {
+      width: 540px;
+      min-height: 675px;
+      position: relative;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      padding: 40px 32px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-slide-light);
+      color: var(--text-light);
+    }
+    .long-canvas.dark {
+      background: var(--bg-slide-dark);
+      color: var(--text-dark);
+    }
+
+    /* ── Typography ── */
+    h1, h2, h3 { margin: 0; font-weight: 700; }
+    p { margin: 0; }
+
+    .title-main {
+      font-size: 32px; line-height: 1.3; margin-bottom: 12px;
+      text-align: center; letter-spacing: -0.5px; font-weight: 800;
+    }
+    .accent-bar {
+      width: 40px; height: 4px; background: var(--accent);
+      margin: 0 auto 20px; border-radius: 2px;
+    }
+    .subtitle {
+      font-size: 14px; text-align: center; opacity: 0.7; margin-bottom: 32px;
+    }
+
+    .long-canvas .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .long-canvas .section-title:first-of-type { margin-top: 0; }
+    .long-canvas .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+
+    /* ── Text Block ── */
+    .text-block { font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+    .text-block strong { font-weight: 700; color: var(--text-light); }
+
+    /* ── Highlight Box ── */
+    .highlight-box {
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-left: 4px solid var(--accent);
+      padding: 16px; font-size: 14px; line-height: 1.6;
+      margin: 16px 0; border-radius: 0 4px 4px 0;
+    }
+
+    /* ── Layer Stack ── */
+    .layer-stack {
+      display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;
+    }
+    .layer {
+      border-radius: 14px; padding: 20px 24px;
+      display: flex; align-items: flex-start; gap: 16px;
+      background: color-mix(in srgb, var(--accent) 8%, var(--bg-slide-light));
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+    .layer-badge {
+      font-size: 11px; font-weight: 800; letter-spacing: 1px;
+      padding: 4px 10px; border-radius: 8px;
+      background: color-mix(in srgb, var(--accent) 25%, transparent);
+      color: var(--accent); flex-shrink: 0;
+    }
+    .layer-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .layer-content p { font-size: 13px; line-height: 1.5; opacity: 0.8; }
+
+    /* ── Phase Flow ── */
+    .phase-flow { display: flex; flex-direction: column; gap: 0; margin-bottom: 24px; }
+    .phase-item {
+      display: grid; grid-template-columns: 60px 1fr; gap: 0;
+      position: relative;
+    }
+    .phase-item:not(:last-child)::after {
+      content: ''; position: absolute; left: 28px; top: 36px; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--accent) 25%, transparent), transparent);
+    }
+    .phase-left {
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 12px; padding-bottom: 20px; position: relative; z-index: 1;
+    }
+    .phase-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+      box-shadow: 0 0 0 4px var(--bg-slide-light);
+      background: var(--accent);
+    }
+    .phase-right { padding: 12px 0 20px 12px; }
+    .phase-right h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .phase-right p { font-size: 13px; line-height: 1.5; opacity: 0.8; }
+
+    /* ── What Box ── */
+    .what-box {
+      background: color-mix(in srgb, var(--accent) 5%, var(--bg-slide-light));
+      border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+      border-radius: 16px; padding: 24px; margin-bottom: 32px;
+      position: relative; overflow: hidden;
+    }
+    .what-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+    }
+    .what-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-light); }
+    .what-box p { font-size: 14px; color: var(--text-light-muted); line-height: 1.6; }
+
+    /* ── Mapping Table ── */
+    .mapping-table {
+      font-size: 14px; line-height: 1.8; width: 100%;
+      border-collapse: collapse; margin: 16px 0;
+    }
+    .mapping-table td {
+      padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .mapping-table tr:last-child td { border-bottom: none; }
+    .mapping-key {
+      color: var(--accent); font-weight: bold; white-space: nowrap; width: 30%;
+    }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: flex; flex-direction: column; gap: 12px; margin: 16px 0;
+    }
+    .card-item {
+      background: rgba(0,0,0,0.04); padding: 16px;
+      border-radius: 8px; font-size: 14px; line-height: 1.6;
+    }
+    .card-title {
+      font-weight: bold; font-size: 15px; margin-bottom: 6px;
+      display: block; color: var(--accent);
+    }
+
+    /* ── Tags ── */
+    .tags {
+      display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0;
+    }
+    .tag {
+      font-size: 11px; padding: 4px 10px; border-radius: 12px;
+      background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* ── Footer ── */
+    .long-footer {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      text-align: center; font-size: 12px; opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <div class="export-toolbar no-export" data-html2canvas-ignore="true">
+    <button class="btn btn-primary" onclick="downloadLongImage()">导出长图</button>
+    <span class="progress-text" id="progress">准备就绪</span>
+  </div>
+
+  <div class="long-canvas light">
+    <!-- 标题区 -->
+    <div class="title-main">咖啡的艺术</div>
+    <div class="accent-bar"></div>
+    <div class="subtitle">从一颗豆子到一杯好咖啡 —— 完整指南</div>
+
+    <!-- What Box -->
+    <div class="what-box">
+      <h3>这篇长文讲什么？</h3>
+      <p>从咖啡的起源、产区风土、处理工艺、烘焙科学、冲煮技法到风味品鉴，系统梳理一杯好咖啡背后的完整知识链。无论你是刚入门的爱好者，还是想精进的玩家，都能找到实用信息。</p>
+    </div>
+
+    <!-- 01 起源 -->
+    <div class="section-title">01 咖啡的起源</div>
+    <div class="text-block">
+      <p>传说中，9世纪的埃塞俄比亚牧羊人卡尔迪发现羊群吃了某种红色浆果后异常兴奋，由此揭开了咖啡的历史。从非洲之角到阿拉伯半岛，从奥斯曼帝国的咖啡馆到欧洲启蒙运动的沙龙，咖啡用<strong>一千年的时间</strong>征服了全世界。</p>
+    </div>
+    <div class="text-block">
+      <p>如今，咖啡是仅次于石油的全球第二大贸易商品，每天有<strong>超过 22 亿杯</strong>被消费。它不仅是一种饮品，更是一种文化、一种社交语言、一种对风味的极致追求。</p>
+    </div>
+
+    <!-- 02 产区 -->
+    <div class="section-title">02 全球产区风土</div>
+    <div class="text-block">
+      <p>世界上所有优质咖啡都生长在南北回归线之间的<strong>"咖啡带"</strong>上。海拔、土壤、气候、品种共同塑造了每个产区独特的风味指纹。</p>
+    </div>
+    <div class="layer-stack">
+      <div class="layer">
+        <div class="layer-badge">非洲</div>
+        <div class="layer-content">
+          <h3>埃塞俄比亚 / 肯尼亚</h3>
+          <p>花香、莓果、柑橘——咖啡的故乡，阿拉比卡的基因宝库。耶加雪菲的茉莉花香和蓝莓风味是精品咖啡的标杆。</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-badge">中南美</div>
+        <div class="layer-content">
+          <h3>哥伦比亚 / 危地马拉 / 巴拿马</h3>
+          <p>坚果、焦糖、巧克力——均衡醇厚的经典代表。巴拿马翡翠庄园的瑰夏曾拍出天价。</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-badge">亚太</div>
+        <div class="layer-content">
+          <h3>印尼 / 云南</h3>
+          <p>草本、香料、烟熏——厚重沉稳的深色风味。曼特宁的药草调性和云南的新兴精品都值得关注。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 处理法 -->
+    <div class="section-title">03 三大处理法</div>
+    <div class="text-block">
+      <p>咖啡樱桃采摘后的处理方式，<strong>决定了最终风味的 50%</strong>。同一产区、同一品种的豆子，换一种处理法，风味可以天差地别。</p>
+    </div>
+    <table class="mapping-table">
+      <tr><td class="mapping-key">水洗</td><td>去除果肉后发酵洗净，干净、明亮、酸质突出。是精品咖啡最常用的处理法，适合浅烘展现产地特征。</td></tr>
+      <tr><td class="mapping-key">日晒</td><td>整颗樱桃日晒干燥，发酵感强、果味浓郁、甜感突出。近年因厌氧日晒等创新工艺而大热。</td></tr>
+      <tr><td class="mapping-key">蜜处理</td><td>保留部分果胶干燥，介于水洗与日晒之间。甜度高、体感好，哥斯达黎加是蜜处理的代表产区。</td></tr>
+    </table>
+    <div class="highlight-box">
+      近年流行的"厌氧发酵""双重发酵"等实验性处理法，正在不断拓展咖啡风味的边界。
+    </div>
+
+    <!-- 04 烘焙 -->
+    <div class="section-title">04 烘焙的光谱</div>
+    <div class="text-block">
+      <p>烘焙不是"深的好"或"浅的好"，而是<strong>不同的风味取向</strong>。生豆在烘焙机中经历 8-15 分钟的热反应，糖分焦糖化、蛋白质美拉德反应，产生上千种风味化合物。</p>
+    </div>
+    <div class="card-grid">
+      <div class="card-item">
+        <span class="card-title">浅烘 (Light)</span>
+        一爆结束即出炉。保留最多产地风土特征，花果酸香明显。适合手冲、爱乐压。颜色浅棕，表面干燥无油。
+      </div>
+      <div class="card-item">
+        <span class="card-title">中烘 (Medium)</span>
+        一爆后延续 1-2 分钟。酸甜平衡，坚果和焦糖调性显现。万金油选择，手冲和意式都能胜任。
+      </div>
+      <div class="card-item">
+        <span class="card-title">深烘 (Dark)</span>
+        接近或进入二爆。苦甜为主，烟熏、巧克力、焦香突出。适合意式浓缩和奶咖。表面出油，颜色深褐至黑。
+      </div>
+    </div>
+
+    <!-- 05 冲煮 -->
+    <div class="section-title">05 手冲四步法</div>
+    <div class="text-block">
+      <p>手冲是最能展现咖啡风味层次的冲煮方式。掌握以下四步，你就能在家做出一杯精品级的手冲咖啡。</p>
+    </div>
+    <div class="phase-flow">
+      <div class="phase-item">
+        <div class="phase-left"><div class="phase-circle">1</div></div>
+        <div class="phase-right">
+          <h4>磨豆</h4>
+          <p>中细研磨，颗粒像砂糖。推荐比例 1:15，即 15g 咖啡豆配 225ml 水。现磨现冲，风味最佳。</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-left"><div class="phase-circle">2</div></div>
+        <div class="phase-right">
+          <h4>闷蒸</h4>
+          <p>92°C 热水注入约 30ml（豆重 2 倍），等待 30 秒。咖啡粉会鼓起"汉堡包"，这是 CO2 释放的信号，表示豆子新鲜。</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-left"><div class="phase-circle">3</div></div>
+        <div class="phase-right">
+          <h4>注水</h4>
+          <p>从中心画小圆向外缓慢注水，避免直冲滤纸边缘。保持水流细而稳定，分 2-3 段注水，每段间隔 10 秒。</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-left"><div class="phase-circle">4</div></div>
+        <div class="phase-right">
+          <h4>收尾</h4>
+          <p>总萃取时间控制在 2:00-2:30。时间到后及时移开滤杯，不要等水完全滴完——尾段萃取容易带出杂味。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 风味 -->
+    <div class="section-title">06 风味品鉴</div>
+    <div class="text-block">
+      <p>SCA（精品咖啡协会）的<strong>风味轮</strong>将咖啡风味分为 9 大类、上百种描述词。你不需要全部记住，但可以从四个维度训练自己的味觉记忆：</p>
+    </div>
+    <table class="mapping-table">
+      <tr><td class="mapping-key">酸质</td><td>柑橘、苹果、莓果——是明亮尖锐还是柔和圆润？好的酸质像水果的鲜活感。</td></tr>
+      <tr><td class="mapping-key">甜感</td><td>蜂蜜、焦糖、黑糖——入口即甜还是回甘悠长？甜感是好咖啡的灵魂。</td></tr>
+      <tr><td class="mapping-key">体感</td><td>轻盈如茶还是厚重如奶？口腔中的重量感和质地，也叫 Body。</td></tr>
+      <tr><td class="mapping-key">余韵</td><td>巧克力、坚果、花香——吞咽后嘴里留下什么？持续多久？这是判断咖啡品质的重要维度。</td></tr>
+    </table>
+    <div class="highlight-box">
+      品鉴没有"正确答案"。你尝到什么，它就是什么——重要的是建立自己的风味词汇表，用语言锚定感官记忆。
+    </div>
+
+    <div class="tags">
+      <span class="tag">精品咖啡</span>
+      <span class="tag">手冲</span>
+      <span class="tag">风味轮</span>
+      <span class="tag">产区</span>
+      <span class="tag">处理法</span>
+      <span class="tag">烘焙</span>
+    </div>
+
+    <div class="long-footer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script>
+    const SCALE = 2;
+    function canvasToBlob(canvas) {
+      return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    }
+    async function downloadLongImage() {
+      const progress = document.getElementById('progress');
+      const fileBase = (document.title || 'long').replace(/[\\/:*?"<>|]+/g, '-');
+      const longCanvas = document.querySelector('.long-canvas');
+      if (!longCanvas) return;
+      progress.textContent = '正在生成长图...';
+      try {
+        const canvas = await html2canvas(longCanvas, {
+          scale: SCALE, useCORS: true, backgroundColor: null,
+          width: 540,
+          height: longCanvas.scrollHeight || longCanvas.clientHeight,
+          windowWidth: 540,
+          windowHeight: longCanvas.scrollHeight || longCanvas.clientHeight,
+          scrollY: 0, logging: false,
+        });
+        const blob = await canvasToBlob(canvas);
+        saveAs(blob, `${fileBase}-长图.png`);
+        progress.textContent = '长图已下载';
+      } catch (e) {
+        console.error(e);
+        progress.textContent = '生成长图失败';
+      }
+    }
+  </script>
+</body>
+</html>
