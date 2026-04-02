@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>咖啡的艺术 - 深度研究</title>
+  <style>
+    :root {
+      --bg-body: #f7f3ee;
+      --bg-slide-dark: #3a2e28;
+      --bg-slide-light: #f7f3ee;
+      --accent: #c4956a;
+      --text-dark: #f5efe6;
+      --text-dark-muted: rgba(245,239,230,0.5);
+      --text-light: #3a3530;
+      --text-light-muted: #8a7e72;
+      --bg-chrome: #f0ebe4;
+      --bg-chrome-hover: #e8e0d6;
+      --border-chrome: #d5cfc6;
+      --text-chrome: #3a3530;
+      --text-chrome-muted: #8a7e72;
+      --font-stack: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+      --sidebar-w: 260px;
+      --toolbar-h: 52px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-slide-light);
+      font-family: var(--font-stack);
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    /* ════ TOOLBAR ════ */
+    .ig-toolbar {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--toolbar-h);
+      background: var(--bg-chrome); border-bottom: 1px solid var(--border-chrome);
+      display: flex; align-items: center; padding: 0 24px; gap: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .ig-toolbar-title {
+      font-size: 15px; font-weight: 700; color: var(--text-light);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ig-toolbar .spacer { flex: 1; }
+    .ig-search-box {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-chrome); border-radius: 8px; padding: 4px 10px;
+    }
+    .ig-search-input {
+      border: none; background: transparent; outline: none;
+      font-size: 13px; width: 180px; font-family: inherit;
+      color: var(--text-light);
+    }
+    .ig-search-input::placeholder { color: var(--text-light-muted); }
+    .ig-search-count { font-size: 11px; color: var(--text-light-muted); white-space: nowrap; }
+    .ig-search-nav { display: flex; gap: 2px; }
+    .ig-search-nav button {
+      border: none; background: transparent; cursor: pointer;
+      font-size: 14px; color: var(--text-light-muted); padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .ig-search-nav button:hover { background: rgba(0,0,0,0.06); color: var(--text-light); }
+    .ig-tb-btn {
+      padding: 6px 12px; border-radius: 6px; font-size: 12px;
+      font-weight: 500; cursor: pointer; border: 1px solid var(--border-chrome);
+      background: var(--bg-chrome); color: var(--text-chrome); transition: all 0.15s;
+      font-family: inherit;
+    }
+    .ig-tb-btn:hover { background: var(--bg-chrome-hover); border-color: var(--accent); }
+    .npc-badge { font-size: 11px; color: var(--text-light-muted); white-space: nowrap; }
+    .npc-badge span { color: var(--accent); font-weight: 700; }
+
+    /* ════ READING PROGRESS ════ */
+    .ig-progress {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+      background: var(--accent); width: 0%; transition: width 0.1s linear;
+    }
+
+    /* ════ LAYOUT ════ */
+    .ig-layout {
+      display: flex; min-height: calc(100vh - var(--toolbar-h));
+    }
+
+    /* ════ SIDEBAR ════ */
+    .ig-sidebar {
+      width: var(--sidebar-w); position: sticky; top: var(--toolbar-h);
+      height: calc(100vh - var(--toolbar-h));
+      overflow-y: auto; background: var(--bg-chrome); border-right: 1px solid var(--border-chrome);
+      padding: 24px 16px; flex-shrink: 0;
+      scrollbar-width: thin; scrollbar-color: var(--border-chrome) transparent;
+    }
+    .ig-sidebar::-webkit-scrollbar { width: 4px; }
+    .ig-sidebar::-webkit-scrollbar-thumb { background: var(--border-chrome); border-radius: 2px; }
+
+    .ig-nav-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .ig-nav-item {
+      display: block; padding: 8px 12px; border-radius: 6px;
+      font-size: 13px; color: var(--text-light-muted);
+      text-decoration: none; margin-bottom: 2px;
+      transition: all 0.15s; cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .ig-nav-item:hover { background: rgba(196,149,106,0.08); color: var(--text-light); }
+    .ig-nav-item.active {
+      background: rgba(196,149,106,0.12); color: var(--accent);
+      font-weight: 600; border-left-color: var(--accent);
+    }
+    .ig-nav-item.sub { padding-left: 28px; font-size: 12px; }
+
+    /* ════ MAIN CONTENT ════ */
+    .ig-main {
+      flex: 1; max-width: 1200px; margin: 0 auto;
+      padding: 48px 56px 80px;
+    }
+
+    /* ── Section / Subsection ── */
+    .ig-section { margin-bottom: 48px; }
+    .ig-section > h2 {
+      font-size: 26px; font-weight: 800; margin-bottom: 8px;
+      color: var(--text-light); letter-spacing: -0.5px;
+      padding-top: 16px;
+    }
+    .ig-section-bar {
+      width: 48px; height: 4px; background: var(--accent);
+      border-radius: 2px; margin-bottom: 24px;
+    }
+    .ig-subsection { margin-bottom: 32px; }
+    .ig-subsection > h3 {
+      font-size: 20px; font-weight: 700; margin-bottom: 12px;
+      color: var(--text-light);
+    }
+
+    /* ── Text ── */
+    .ig-text {
+      font-size: 15px; line-height: 1.8; margin-bottom: 16px;
+      color: var(--text-light);
+    }
+    .ig-text strong { color: var(--accent); font-weight: 600; }
+
+    /* ── Card ── */
+    .ig-card {
+      background: var(--bg-body); border: 1px solid var(--border-chrome);
+      border-radius: 12px; padding: 24px; margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .ig-card-title {
+      font-size: 16px; font-weight: 700; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .ig-card-body { font-size: 14px; line-height: 1.7; color: var(--text-light); }
+
+    /* ── Card Grid ── */
+    .ig-card-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+    .ig-card-grid .ig-card { margin-bottom: 0; }
+
+    /* ── Table ── */
+    .ig-table { margin-bottom: 24px; width: 100%; overflow-x: auto; }
+    .ig-table table {
+      width: 100%; border-collapse: collapse; font-size: 14px;
+    }
+    .ig-table th {
+      background: rgba(196,149,106,0.12); color: var(--accent);
+      font-weight: 700; text-align: left; padding: 12px 16px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .ig-table td {
+      padding: 10px 16px; border-bottom: 1px solid var(--border-chrome);
+      color: var(--text-light);
+    }
+    .ig-table tr:last-child td { border-bottom: none; }
+    .ig-table tr:hover td { background: rgba(196,149,106,0.04); }
+
+    /* ── Callout ── */
+    .ig-callout {
+      border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;
+      font-size: 14px; line-height: 1.7;
+    }
+    .ig-callout-info {
+      background: rgba(196,149,106,0.08); border-left: 4px solid var(--accent);
+    }
+    .ig-callout-tip {
+      background: rgba(45,134,89,0.08); border-left: 4px solid #2d8659;
+    }
+    .ig-callout-warn {
+      background: rgba(232,93,58,0.08); border-left: 4px solid #e85d3a;
+    }
+    .ig-callout strong { display: block; margin-bottom: 4px; }
+
+    /* ── Flow ── */
+    .ig-flow {
+      display: flex; gap: 0; margin-bottom: 24px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .ig-flow-step {
+      flex: 1; min-width: 140px; text-align: center;
+      padding: 16px; position: relative;
+    }
+    .ig-flow-step:not(:last-child)::after {
+      content: ''; position: absolute; right: -8px; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid var(--accent);
+      opacity: 0.4;
+    }
+    .ig-flow-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; margin: 0 auto 8px;
+    }
+    .ig-flow-label { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .ig-flow-desc { font-size: 12px; color: var(--text-light-muted); }
+
+    /* ── Collapse ── */
+    .ig-collapse {
+      border: 1px solid var(--border-chrome); border-radius: 8px;
+      margin-bottom: 12px; overflow: hidden;
+    }
+    .ig-collapse-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; cursor: pointer;
+      background: var(--bg-chrome); font-size: 14px; font-weight: 600;
+      user-select: none; transition: background 0.15s;
+    }
+    .ig-collapse-header:hover { background: var(--bg-chrome-hover); }
+    .ig-collapse-icon {
+      transition: transform 0.2s; font-size: 12px; color: var(--text-light-muted);
+    }
+    .ig-collapse.open .ig-collapse-icon { transform: rotate(90deg); }
+    .ig-collapse-body {
+      display: none; padding: 16px;
+      border-top: 1px solid var(--border-chrome);
+      font-size: 14px; line-height: 1.7;
+    }
+    .ig-collapse.open .ig-collapse-body { display: block; }
+
+    /* ── Blockquote ── */
+    .ig-blockquote {
+      border-left: 3px solid var(--accent); padding: 12px 20px;
+      margin: 16px 0; font-style: italic;
+      color: var(--text-light-muted); font-size: 15px; line-height: 1.7;
+    }
+
+    /* ── Tags ── */
+    .ig-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    .ig-tag {
+      font-size: 11px; padding: 4px 10px; border-radius: 12px;
+      background: rgba(196,149,106,0.1); color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── Divider ── */
+    .ig-divider {
+      height: 1px; background: var(--border-chrome); margin: 32px 0;
+    }
+
+    /* ── Search highlight ── */
+    mark {
+      background: rgba(196,149,106,0.35); color: inherit;
+      border-radius: 2px; padding: 1px 2px;
+    }
+    mark.current { background: var(--accent); color: #fff; }
+
+    /* ════ MOBILE ════ */
+    @media (max-width: 900px) {
+      .ig-sidebar { display: none; }
+      .ig-main { padding: 24px 20px 60px; }
+      .ig-card-grid { grid-template-columns: 1fr; }
+      .ig-flow { flex-direction: column; align-items: center; }
+      .ig-flow-step::after { display: none; }
+    }
+
+    /* ════ PRINT ════ */
+    @media print {
+      .ig-toolbar, .ig-sidebar, .ig-progress { display: none !important; }
+      .ig-layout { display: block; }
+      .ig-main { max-width: 100%; padding: 20px; }
+      .ig-collapse-body { display: block !important; }
+      .ig-collapse-header .ig-collapse-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress -->
+  <div class="ig-progress" id="ig-progress"></div>
+
+  <!-- Toolbar -->
+  <div class="ig-toolbar">
+    <span class="ig-toolbar-title">咖啡的艺术 - 深度研究</span>
+    <span class="spacer"></span>
+    <div class="ig-search-box">
+      <input class="ig-search-input" id="search-input" type="text" placeholder="搜索内容... (Ctrl+F)">
+      <span class="ig-search-count" id="search-count"></span>
+      <div class="ig-search-nav">
+        <button onclick="searchNav(-1)" title="上一个">&#9650;</button>
+        <button onclick="searchNav(1)" title="下一个">&#9660;</button>
+      </div>
+    </div>
+    <button class="ig-tb-btn" id="toggle-collapse-btn" onclick="toggleAllCollapse()">全部展开</button>
+    <button class="ig-tb-btn" onclick="window.print()">打印</button>
+    <span class="npc-badge">powered by <span>NPC</span></span>
+  </div>
+
+  <div class="ig-layout">
+
+    <!-- Sidebar -->
+    <nav class="ig-sidebar" id="ig-sidebar">
+      <div class="ig-nav-title">目录</div>
+      <a class="ig-nav-item" href="#sec-origin">起源与历史</a>
+      <a class="ig-nav-item sub" href="#sub-legend">牧羊人传说</a>
+      <a class="ig-nav-item sub" href="#sub-spread">全球传播</a>
+      <a class="ig-nav-item" href="#sec-regions">全球产区风土</a>
+      <a class="ig-nav-item sub" href="#sub-africa">非洲产区</a>
+      <a class="ig-nav-item sub" href="#sub-americas">中南美产区</a>
+      <a class="ig-nav-item sub" href="#sub-asia">亚太产区</a>
+      <a class="ig-nav-item" href="#sec-processing">处理法</a>
+      <a class="ig-nav-item sub" href="#sub-washed">水洗</a>
+      <a class="ig-nav-item sub" href="#sub-natural">日晒</a>
+      <a class="ig-nav-item sub" href="#sub-honey">蜜处理</a>
+      <a class="ig-nav-item" href="#sec-roasting">烘焙科学</a>
+      <a class="ig-nav-item" href="#sec-brewing">冲煮技法</a>
+      <a class="ig-nav-item sub" href="#sub-pourover">手冲</a>
+      <a class="ig-nav-item sub" href="#sub-espresso">意式浓缩</a>
+      <a class="ig-nav-item" href="#sec-tasting">风味品鉴</a>
+      <a class="ig-nav-item" href="#sec-appendix">附录</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="ig-main" id="ig-main">
+
+      <!-- ══ 1. 起源 ══ -->
+      <div class="ig-section" id="sec-origin">
+        <h2>起源与历史</h2>
+        <div class="ig-section-bar"></div>
+
+        <div class="ig-subsection" id="sub-legend">
+          <h3>牧羊人传说</h3>
+          <p class="ig-text">传说中，9世纪的埃塞俄比亚牧羊人<strong>卡尔迪 (Kaldi)</strong> 发现羊群吃了某种红色浆果后异常兴奋、彻夜不眠。他将浆果带给当地修道院的僧侣，僧侣们发现用热水冲泡后能帮助长时间祈祷——咖啡的饮用史由此开始。</p>
+          <p class="ig-text">虽然这个故事可能只是后人附会，但它指向了一个确切的事实：<strong>咖啡的原产地就是埃塞俄比亚西南部的卡法 (Kaffa) 地区</strong>。至今，这片高原森林中仍然生长着数千种野生阿拉比卡咖啡品种，是全球咖啡基因多样性的宝库。</p>
+        </div>
+
+        <div class="ig-subsection" id="sub-spread">
+          <h3>全球传播</h3>
+          <p class="ig-text">咖啡从埃塞传入也门后，经阿拉伯商人之手走向世界。以下是关键节点：</p>
+          <div class="ig-table">
+            <table>
+              <thead><tr><th>时间</th><th>事件</th><th>意义</th></tr></thead>
+              <tbody>
+                <tr><td>15世纪</td><td>也门苏菲派僧侣开始饮用咖啡</td><td>最早的有据可查的咖啡饮用记录</td></tr>
+                <tr><td>16世纪</td><td>奥斯曼帝国咖啡馆兴起</td><td>"学校中的智者"——咖啡馆成为知识交流中心</td></tr>
+                <tr><td>17世纪</td><td>咖啡传入欧洲，伦敦咖啡馆爆发</td><td>Lloyd's 保险、伦敦证券交易所都诞生于咖啡馆</td></tr>
+                <tr><td>18世纪</td><td>荷兰人将咖啡种植带到印尼</td><td>殖民地种植园模式开启，咖啡变成全球商品</td></tr>
+                <tr><td>20世纪</td><td>速溶咖啡和意式浓缩机普及</td><td>咖啡从精英饮品变成大众日常</td></tr>
+                <tr><td>21世纪</td><td>第三波精品咖啡运动</td><td>从"提神工具"回归"风味艺术"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ig-callout ig-callout-info">
+            <strong>第三波咖啡浪潮</strong>
+            如果第一波是"喝咖啡"（速溶），第二波是"喝好咖啡"（星巴克），那第三波就是"理解咖啡"——追溯产地、处理法、烘焙曲线，把咖啡当作和葡萄酒一样的风味饮品来对待。
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 2. 产区 ══ -->
+      <div class="ig-section" id="sec-regions">
+        <h2>全球产区风土</h2>
+        <div class="ig-section-bar"></div>
+        <p class="ig-text">世界上所有优质咖啡都生长在南北回归线之间的<strong>"咖啡带"</strong>上。海拔、土壤、气候、品种共同塑造了每个产区独特的风味指纹。全球咖啡产量中，阿拉比卡占约 60%（风味更丰富），罗布斯塔占约 40%（咖啡因更高、抗病力强）。</p>
+
+        <div class="ig-subsection" id="sub-africa">
+          <h3>非洲产区</h3>
+          <div class="ig-card-grid">
+            <div class="ig-card">
+              <div class="ig-card-title">埃塞俄比亚</div>
+              <div class="ig-card-body">
+                <p>咖啡的故乡。耶加雪菲 (Yirgacheffe) 以茉莉花香和柑橘酸质闻名；西达摩 (Sidamo) 偏莓果和巧克力；古吉 (Guji) 则有热带水果的浓郁甜感。品种多为原生种 (heirloom)，基因多样性极高。</p>
+                <div class="ig-tags">
+                  <span class="ig-tag">花香</span><span class="ig-tag">莓果</span><span class="ig-tag">柑橘</span><span class="ig-tag">茶感</span>
+                </div>
+              </div>
+            </div>
+            <div class="ig-card">
+              <div class="ig-card-title">肯尼亚</div>
+              <div class="ig-card-body">
+                <p>以 SL28、SL34 等高品质品种著称。典型风味是黑醋栗、蕃茄般的明亮酸质和浓郁果汁感。AA 等级代表最大颗粒的筛选标准。肯尼亚的拍卖制度确保了高品质批次的透明竞价。</p>
+                <div class="ig-tags">
+                  <span class="ig-tag">黑醋栗</span><span class="ig-tag">蕃茄</span><span class="ig-tag">高酸</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ig-subsection" id="sub-americas">
+          <h3>中南美产区</h3>
+          <div class="ig-card-grid">
+            <div class="ig-card">
+              <div class="ig-card-title">哥伦比亚</div>
+              <div class="ig-card-body">
+                <p>全球第三大咖啡生产国。慧兰 (Huila)、娜玲珑 (Narino) 等产区出产均衡醇厚的精品豆。典型风味是焦糖、坚果、巧克力，酸甜平衡，是精品咖啡的"入门标杆"。</p>
+              </div>
+            </div>
+            <div class="ig-card">
+              <div class="ig-card-title">巴拿马</div>
+              <div class="ig-card-body">
+                <p>翡翠庄园 (Hacienda La Esmeralda) 的瑰夏 (Gesha) 品种在 2004 年 BOP 大赛中一鸣惊人，以茉莉、佛手柑、蜂蜜般的复杂风味重新定义了咖啡的上限。如今瑰夏拍卖价可达每磅数百美元。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ig-subsection" id="sub-asia">
+          <h3>亚太产区</h3>
+          <div class="ig-card-grid">
+            <div class="ig-card">
+              <div class="ig-card-title">印尼</div>
+              <div class="ig-card-body">
+                <p>苏门答腊曼特宁以湿刨法 (wet-hulling) 独有的草本、泥土、香料调性著称，体感厚重如巧克力。爪哇和苏拉威西也是重要产区。</p>
+              </div>
+            </div>
+            <div class="ig-card">
+              <div class="ig-card-title">中国云南</div>
+              <div class="ig-card-body">
+                <p>普洱、保山等地近年在精品咖啡领域崛起。高海拔种植的卡蒂姆和新引进的瑰夏品种展现出坚果、红糖、甚至热带水果的风味潜力。中国精品咖啡正在被世界重新认识。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 3. 处理法 ══ -->
+      <div class="ig-section" id="sec-processing">
+        <h2>处理法</h2>
+        <div class="ig-section-bar"></div>
+        <p class="ig-text">咖啡樱桃采摘后的处理方式，<strong>决定了最终风味的 50%</strong>。同一产区、同一品种的豆子，换一种处理法，风味可以天差地别。</p>
+
+        <div class="ig-subsection" id="sub-washed">
+          <h3>水洗 (Washed)</h3>
+          <p class="ig-text">采摘后立即去除果皮果肉，在水槽中发酵 12-36 小时分解残余果胶，然后用清水洗净并干燥。水洗法产出的咖啡干净、明亮、酸质突出，能最大程度展现产地风土特征。是精品咖啡中使用最广泛的处理法。</p>
+          <div class="ig-callout ig-callout-tip">
+            <strong>为什么水洗最"干净"？</strong>
+            因为在发酵阶段就移除了所有果肉和果胶，咖啡豆的风味完全来自豆子本身，不受果肉发酵的影响。
+          </div>
+        </div>
+
+        <div class="ig-subsection" id="sub-natural">
+          <h3>日晒 (Natural)</h3>
+          <p class="ig-text">整颗咖啡樱桃铺在晾晒床上日晒干燥 2-4 周，期间定时翻动防止霉变。果肉中的糖分在干燥过程中渗透进豆子，赋予强烈的发酵感、浓郁果味和突出甜感。日晒法是最古老的处理方式，近年因厌氧日晒、慢速日晒等创新变体而重新走红。</p>
+        </div>
+
+        <div class="ig-subsection" id="sub-honey">
+          <h3>蜜处理 (Honey Process)</h3>
+          <p class="ig-text">去除果皮但保留不同比例的果胶层（"蜜"指的就是黏稠的果胶），然后干燥。根据保留果胶的比例，分为白蜜（最少）、黄蜜、红蜜、黑蜜（最多）。果胶保留越多，甜感和体感越突出。哥斯达黎加是蜜处理的代表产区。</p>
+          <div class="ig-table">
+            <table>
+              <thead><tr><th>类型</th><th>果胶保留</th><th>风味特征</th></tr></thead>
+              <tbody>
+                <tr><td>白蜜</td><td>~10-20%</td><td>接近水洗，干净明亮，微甜</td></tr>
+                <tr><td>黄蜜</td><td>~25-50%</td><td>甜感增加，蜂蜜调</td></tr>
+                <tr><td>红蜜</td><td>~50-80%</td><td>果味浓郁，体感厚实</td></tr>
+                <tr><td>黑蜜</td><td>~80-100%</td><td>接近日晒，发酵感强，甜度最高</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 4. 烘焙 ══ -->
+      <div class="ig-section" id="sec-roasting">
+        <h2>烘焙科学</h2>
+        <div class="ig-section-bar"></div>
+        <p class="ig-text">生豆在烘焙机中经历 8-15 分钟的热反应。温度从室温升至 190-230°C，触发两个关键化学过程：<strong>美拉德反应</strong>（蛋白质 + 糖 = 焦香/坚果/巧克力风味）和<strong>焦糖化反应</strong>（糖分分解 = 甜感/苦味）。</p>
+
+        <div class="ig-table">
+          <table>
+            <thead><tr><th>烘焙度</th><th>温度范围</th><th>外观</th><th>风味特征</th><th>适合冲煮</th></tr></thead>
+            <tbody>
+              <tr><td>浅烘 (Light)</td><td>190-205°C</td><td>浅棕，表面干燥</td><td>花香、果酸、茶感</td><td>手冲、爱乐压</td></tr>
+              <tr><td>中浅烘</td><td>205-215°C</td><td>棕色，微光</td><td>酸甜平衡，果香+坚果</td><td>手冲、虹吸</td></tr>
+              <tr><td>中烘 (Medium)</td><td>215-225°C</td><td>深棕，干燥</td><td>焦糖、坚果、巧克力</td><td>手冲、美式</td></tr>
+              <tr><td>中深烘</td><td>225-230°C</td><td>深褐，微出油</td><td>苦甜、烟熏、可可</td><td>意式、摩卡壶</td></tr>
+              <tr><td>深烘 (Dark)</td><td>230°C+</td><td>黑褐，表面出油</td><td>碳烤、苦味主导</td><td>意式浓缩、法压</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ig-callout ig-callout-warn">
+          <strong>常见误区</strong>
+          "深烘 = 好咖啡"是商业咖啡时代的遗留观念。深烘会掩盖产地特征，常被用来隐藏低品质生豆的瑕疵味。精品咖啡更倾向浅到中烘，让豆子"说自己的话"。
+        </div>
+      </div>
+
+      <!-- ══ 5. 冲煮 ══ -->
+      <div class="ig-section" id="sec-brewing">
+        <h2>冲煮技法</h2>
+        <div class="ig-section-bar"></div>
+
+        <div class="ig-subsection" id="sub-pourover">
+          <h3>手冲 (Pour Over)</h3>
+          <p class="ig-text">手冲是最能展现咖啡风味层次的冲煮方式，通过控制水温、研磨度、注水手法和萃取时间来精确调控出杯风味。</p>
+
+          <div class="ig-flow">
+            <div class="ig-flow-step">
+              <div class="ig-flow-num">1</div>
+              <div class="ig-flow-label">磨豆</div>
+              <div class="ig-flow-desc">中细研磨<br>15g : 225ml</div>
+            </div>
+            <div class="ig-flow-step">
+              <div class="ig-flow-num">2</div>
+              <div class="ig-flow-label">闷蒸</div>
+              <div class="ig-flow-desc">92°C / 30ml<br>等待 30s</div>
+            </div>
+            <div class="ig-flow-step">
+              <div class="ig-flow-num">3</div>
+              <div class="ig-flow-label">注水</div>
+              <div class="ig-flow-desc">中心画圆<br>分 2-3 段</div>
+            </div>
+            <div class="ig-flow-step">
+              <div class="ig-flow-num">4</div>
+              <div class="ig-flow-label">收尾</div>
+              <div class="ig-flow-desc">总时 2:00-2:30<br>及时移杯</div>
+            </div>
+          </div>
+
+          <div class="ig-callout ig-callout-tip">
+            <strong>新手最常见的问题</strong>
+            萃取不足（太酸太尖锐）= 磨粗了或水温低了或时间短了。萃取过度（苦涩）= 磨细了或水温高了或时间长了。调整时一次只动一个变量。
+          </div>
+        </div>
+
+        <div class="ig-subsection" id="sub-espresso">
+          <h3>意式浓缩 (Espresso)</h3>
+          <p class="ig-text">用 9 Bar 压力在 25-30 秒内萃取 18-20g 极细研磨咖啡粉，得到约 36-40ml 的浓缩液。意式是所有奶咖（拿铁、卡布奇诺、澳白）的基础。</p>
+          <div class="ig-table">
+            <table>
+              <thead><tr><th>参数</th><th>标准值</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>粉量</td><td>18-20g</td><td>双份 (doppio) 标准</td></tr>
+                <tr><td>萃取量</td><td>36-40ml</td><td>粉液比约 1:2</td></tr>
+                <tr><td>萃取时间</td><td>25-30s</td><td>从按下按钮到停止计时</td></tr>
+                <tr><td>水温</td><td>92-96°C</td><td>深烘偏低，浅烘偏高</td></tr>
+                <tr><td>压力</td><td>9 Bar</td><td>行业标准压力</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 6. 风味品鉴 ══ -->
+      <div class="ig-section" id="sec-tasting">
+        <h2>风味品鉴</h2>
+        <div class="ig-section-bar"></div>
+        <p class="ig-text">SCA（精品咖啡协会）的<strong>风味轮</strong>将咖啡风味分为 9 大类、上百种描述词。你不需要全部记住，但可以从四个核心维度训练自己的味觉记忆：</p>
+
+        <div class="ig-card-grid">
+          <div class="ig-card">
+            <div class="ig-card-title">酸质 (Acidity)</div>
+            <div class="ig-card-body">柑橘、苹果、莓果——是明亮尖锐还是柔和圆润？好的酸质像水果的鲜活感，不好的酸质像醋。酸质是区分产地和处理法的关键指标。</div>
+          </div>
+          <div class="ig-card">
+            <div class="ig-card-title">甜感 (Sweetness)</div>
+            <div class="ig-card-body">蜂蜜、焦糖、黑糖——入口即甜还是回甘悠长？甜感是好咖啡的灵魂，往往和烘焙度、处理法直接相关。</div>
+          </div>
+          <div class="ig-card">
+            <div class="ig-card-title">体感 (Body)</div>
+            <div class="ig-card-body">轻盈如茶还是厚重如奶？口腔中的重量感和质地。水洗浅烘通常体感轻盈，日晒深烘通常体感厚重。</div>
+          </div>
+          <div class="ig-card">
+            <div class="ig-card-title">余韵 (Aftertaste)</div>
+            <div class="ig-card-body">巧克力、坚果、花香——吞咽后嘴里留下什么？持续多久？余韵的持久度和愉悦度是判断咖啡品质的重要维度。</div>
+          </div>
+        </div>
+
+        <div class="ig-blockquote">
+          品鉴没有"正确答案"。你尝到什么，它就是什么——重要的是建立自己的风味词汇表，用语言锚定感官记忆。多喝、多对比、多记录，味觉的敏感度会自然提升。
+        </div>
+      </div>
+
+      <div class="ig-divider"></div>
+
+      <!-- ══ 附录 ══ -->
+      <div class="ig-section" id="sec-appendix">
+        <h2>附录</h2>
+        <div class="ig-section-bar"></div>
+
+        <div class="ig-collapse">
+          <div class="ig-collapse-header" onclick="toggleCollapse(this)">
+            <span class="ig-collapse-icon">&#9654;</span>
+            附录 A: 常见咖啡品种速查
+          </div>
+          <div class="ig-collapse-body">
+            <div class="ig-table">
+              <table>
+                <thead><tr><th>品种</th><th>物种</th><th>特征</th><th>代表产区</th></tr></thead>
+                <tbody>
+                  <tr><td>铁皮卡 (Typica)</td><td>阿拉比卡</td><td>最古老的栽培品种，风味干净，产量低</td><td>牙买加蓝山、夏威夷</td></tr>
+                  <tr><td>波旁 (Bourbon)</td><td>阿拉比卡</td><td>甜感突出，焦糖和巧克力调</td><td>巴西、卢旺达</td></tr>
+                  <tr><td>瑰夏 (Gesha)</td><td>阿拉比卡</td><td>花香、佛手柑、蜂蜜，风味天花板</td><td>巴拿马、哥伦比亚</td></tr>
+                  <tr><td>SL28/SL34</td><td>阿拉比卡</td><td>黑醋栗、高酸、果汁感</td><td>肯尼亚</td></tr>
+                  <tr><td>卡蒂姆 (Catimor)</td><td>阿拉比卡杂交</td><td>抗病力强，风味中规中矩</td><td>云南、越南</td></tr>
+                  <tr><td>罗布斯塔 (Robusta)</td><td>罗布斯塔</td><td>咖啡因高，苦味重，抗病强</td><td>越南、印尼</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="ig-collapse">
+          <div class="ig-collapse-header" onclick="toggleCollapse(this)">
+            <span class="ig-collapse-icon">&#9654;</span>
+            附录 B: 手冲器具推荐
+          </div>
+          <div class="ig-collapse-body">
+            <div class="ig-card-grid">
+              <div class="ig-card">
+                <div class="ig-card-title">Hario V60</div>
+                <div class="ig-card-body">最经典的锥形滤杯，螺旋沟槽设计，流速快，适合技术流玩家。对注水手法要求较高，但风味天花板也最高。</div>
+              </div>
+              <div class="ig-card">
+                <div class="ig-card-title">Kalita Wave 185</div>
+                <div class="ig-card-body">平底三孔设计，萃取更均匀稳定，对新手友好。波浪滤纸减少侧壁接触，出杯一致性好。</div>
+              </div>
+              <div class="ig-card">
+                <div class="ig-card-title">Origami 折纸滤杯</div>
+                <div class="ig-card-body">兼容 V60 和 Wave 滤纸，颜值在线。20 道沟槽设计流速适中，是近年比赛选手的热门选择。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ig-collapse">
+          <div class="ig-collapse-header" onclick="toggleCollapse(this)">
+            <span class="ig-collapse-icon">&#9654;</span>
+            附录 C: 推荐阅读与资源
+          </div>
+          <div class="ig-collapse-body">
+            <p class="ig-text"><strong>The World Atlas of Coffee</strong> - James Hoffmann 著，精品咖啡入门圣经，覆盖全球产区和冲煮方法。</p>
+            <p class="ig-text"><strong>Coffee: A Comprehensive Guide</strong> - 从化学角度解析咖啡萃取的科学原理。</p>
+            <p class="ig-text"><strong>SCA Coffee Taster's Flavor Wheel</strong> - 风味轮官方资源，品鉴训练的基础工具。</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+  (function() {
+    'use strict';
+
+    /* ══ Collapse ══ */
+    window.toggleCollapse = function(header) {
+      header.closest('.ig-collapse').classList.toggle('open');
+    };
+
+    let allExpanded = false;
+    window.toggleAllCollapse = function() {
+      allExpanded = !allExpanded;
+      document.querySelectorAll('.ig-collapse').forEach(c => {
+        c.classList.toggle('open', allExpanded);
+      });
+      document.getElementById('toggle-collapse-btn').textContent = allExpanded ? '全部折叠' : '全部展开';
+    };
+
+    /* ══ Search ══ */
+    let searchMarks = [];
+    let searchIdx = -1;
+
+    const input = document.getElementById('search-input');
+    const countEl = document.getElementById('search-count');
+
+    input.addEventListener('input', doSearch);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchNav(e.shiftKey ? -1 : 1);
+      } else if (e.key === 'Escape') {
+        input.value = '';
+        clearSearch();
+        input.blur();
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        input.focus();
+        input.select();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+        e.preventDefault();
+        window.toggleAllCollapse();
+      }
+    });
+
+    function doSearch() {
+      clearSearch();
+      const q = input.value.trim();
+      if (!q) { countEl.textContent = ''; return; }
+
+      const main = document.getElementById('ig-main');
+      const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+
+      nodes.forEach(node => {
+        const text = node.textContent;
+        if (!re.test(text)) return;
+        re.lastIndex = 0;
+
+        const parent = node.parentNode;
+        if (parent.tagName === 'MARK' || parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return;
+
+        const frag = document.createDocumentFragment();
+        let lastIdx = 0;
+        let match;
+        while ((match = re.exec(text)) !== null) {
+          if (match.index > lastIdx) {
+            frag.appendChild(document.createTextNode(text.slice(lastIdx, match.index)));
+          }
+          const mark = document.createElement('mark');
+          mark.textContent = match[0];
+          frag.appendChild(mark);
+          searchMarks.push(mark);
+          lastIdx = re.lastIndex;
+        }
+        if (lastIdx < text.length) {
+          frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+        }
+        parent.replaceChild(frag, node);
+      });
+
+      countEl.textContent = searchMarks.length ? `${searchMarks.length} 个匹配` : '无匹配';
+      if (searchMarks.length) { searchIdx = 0; highlightCurrent(); }
+    }
+
+    function clearSearch() {
+      document.querySelectorAll('#ig-main mark').forEach(m => {
+        const parent = m.parentNode;
+        parent.replaceChild(document.createTextNode(m.textContent), m);
+        parent.normalize();
+      });
+      searchMarks = [];
+      searchIdx = -1;
+    }
+
+    function highlightCurrent() {
+      searchMarks.forEach(m => m.classList.remove('current'));
+      if (searchIdx >= 0 && searchIdx < searchMarks.length) {
+        searchMarks[searchIdx].classList.add('current');
+        searchMarks[searchIdx].scrollIntoView({ block: 'center', behavior: 'smooth' });
+        countEl.textContent = `${searchIdx + 1} / ${searchMarks.length}`;
+      }
+    }
+
+    window.searchNav = function(dir) {
+      if (!searchMarks.length) return;
+      searchIdx = (searchIdx + dir + searchMarks.length) % searchMarks.length;
+      highlightCurrent();
+    };
+
+    /* ══ Sidebar active tracking ══ */
+    const sections = document.querySelectorAll('[id^="sec-"], [id^="sub-"]');
+    const navItems = document.querySelectorAll('.ig-nav-item');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navItems.forEach(n => n.classList.remove('active'));
+          const link = document.querySelector(`.ig-nav-item[href="#${entry.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+
+    /* ══ Reading progress ══ */
+    const progressBar = document.getElementById('ig-progress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    });
+  })();
+  </script>
+</body>
+</html>

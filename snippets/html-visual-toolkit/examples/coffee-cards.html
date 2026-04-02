@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>咖啡的艺术</title>
+  <style>
+    /* ── Variables (warm 主题) ── */
+    :root {
+      --bg-body: #f7f3ee;
+      --bg-slide-dark: #3a2e28;
+      --bg-slide-light: #f7f3ee;
+      --accent: #c4956a;
+      --text-dark: #f5efe6;
+      --text-dark-muted: rgba(245,239,230,0.5);
+      --text-light: #3a3530;
+      --text-light-muted: #8a7e72;
+      --bg-chrome: #f0ebe4;
+      --bg-chrome-hover: #e8e0d6;
+      --border-chrome: #d5cfc6;
+      --text-chrome: #3a3530;
+      --text-chrome-muted: #8a7e72;
+      --font-stack: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+    }
+
+    /* ── Reset + Body ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-body);
+      padding-top: 70px;
+      font-family: var(--font-stack);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ── Toolbar ── */
+    .export-toolbar {
+      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+      background: var(--bg-chrome); display: flex; justify-content: center;
+      align-items: center; gap: 16px; z-index: 1000;
+      border-bottom: 1px solid var(--border-chrome);
+    }
+    .btn {
+      padding: 8px 16px; border-radius: 4px; font-size: 14px;
+      font-weight: 500; cursor: pointer; border: none; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary { background: var(--bg-chrome-hover); color: var(--text-chrome); border: 1px solid var(--border-chrome); }
+    .btn-secondary:hover { background: var(--border-chrome); }
+    .progress-text {
+      color: var(--text-chrome-muted); font-size: 12px; min-width: 120px; text-align: center;
+    }
+
+    /* ── Slide (Card) ── */
+    .slide {
+      width: 540px; height: 675px;
+      position: relative; overflow: hidden;
+      border-radius: 8px; margin-bottom: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      flex-shrink: 0; display: flex; flex-direction: column;
+      padding: 28px; box-sizing: border-box;
+    }
+    .slide.dark { background: var(--bg-slide-dark); color: var(--text-dark); }
+    .slide.light { background: var(--bg-slide-light); color: var(--text-light); }
+
+    /* ── Typography ── */
+    h1, h2, h3 { margin: 0; font-weight: 700; }
+    p { margin: 0; }
+
+    .title-main {
+      font-size: 28px; line-height: 1.3; margin-bottom: 16px;
+      text-align: center; letter-spacing: -0.5px;
+    }
+    .accent-bar {
+      width: 40px; height: 4px; background: var(--accent);
+      margin: 0 auto 20px; border-radius: 2px;
+    }
+    .subtitle {
+      font-size: 14px; text-align: center; opacity: 0.8; margin-bottom: 20px;
+    }
+    .page-num {
+      position: absolute; bottom: 20px; right: 28px;
+      font-size: 12px; opacity: 0.4;
+    }
+
+    /* ── Text Block ── */
+    .text-block { font-size: 16px; line-height: 1.6; }
+    .text-block strong { font-weight: 700; }
+    .dark .text-block strong { color: var(--text-dark); }
+    .light .text-block strong { color: var(--text-light); }
+
+    /* ── Highlight Box ── */
+    .highlight-box {
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
+      border-left: 4px solid var(--accent);
+      padding: 16px; font-size: 14px; line-height: 1.6;
+      margin-top: auto; border-radius: 0 4px 4px 0;
+    }
+    .light .highlight-box { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: flex; flex-direction: column; gap: 16px;
+      flex: 1; justify-content: center; margin-top: 20px;
+    }
+    .card-item {
+      background: rgba(0,0,0,0.2); padding: 16px;
+      border-radius: 8px; font-size: 14px; line-height: 1.6;
+    }
+    .light .card-item { background: rgba(0,0,0,0.04); }
+    .card-title {
+      font-weight: bold; font-size: 16px; margin-bottom: 8px;
+      display: block; color: var(--accent);
+    }
+
+    /* ── Mapping Table ── */
+    .mapping-table {
+      font-size: 15px; line-height: 1.8; width: 100%;
+      border-collapse: collapse; margin-top: 20px;
+    }
+    .mapping-table td {
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .light .mapping-table td { border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .mapping-table tr:last-child td { border-bottom: none; }
+    .mapping-key {
+      color: var(--accent); font-weight: bold; white-space: nowrap; width: 35%;
+    }
+    .mapping-val { text-align: left; }
+
+    /* ── Step List ── */
+    .step-list {
+      display: flex; flex-direction: column; gap: 20px; margin-top: 20px;
+    }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      font-size: 14px; line-height: 1.6;
+    }
+    .step-num {
+      width: 24px; height: 24px; background: var(--accent); color: #fff;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 12px; font-weight: bold;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step-content strong {
+      display: block; color: var(--accent); margin-bottom: 4px; font-size: 16px;
+    }
+
+    /* ── Tags ── */
+    .tags {
+      margin-top: 30px; display: flex; gap: 12px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 12px; padding: 6px 12px; border-radius: 16px;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    }
+    .light .tag {
+      background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1);
+    }
+
+    /* ── Cover / Ending ── */
+    .slide-cover {
+      justify-content: center; align-items: center;
+    }
+    .slide-ending {
+      justify-content: center; align-items: center; text-align: center;
+    }
+    .final-text { font-size: 32px; line-height: 1.6; font-weight: 700; }
+    .small-muted { margin-top: 40px; font-size: 16px; opacity: 0.5; line-height: 1.5; }
+    .footer {
+      position: absolute; bottom: 20px; left: 0; width: 100%;
+      text-align: center; font-size: 12px; opacity: 0.3;
+    }
+
+    /* ── Spacer ── */
+    .spacer { flex: 1; }
+  </style>
+</head>
+<body>
+  <div class="export-toolbar no-export" data-html2canvas-ignore="true">
+    <button class="btn btn-primary" onclick="downloadLongImage()">导出长图</button>
+    <button class="btn btn-secondary" onclick="downloadAll()">批量卡片 (ZIP)</button>
+    <button class="btn btn-secondary" onclick="downloadOne()">单页下载</button>
+    <span class="progress-text" id="progress">准备就绪</span>
+  </div>
+
+  <!-- Slide 1: 封面 -->
+  <div class="slide dark slide-cover">
+    <div class="spacer"></div>
+    <div class="title-main" style="font-size:32px; display:flex; flex-direction:column; gap:12px;">
+      <span>咖啡的艺术</span>
+      <span>从一颗豆子到一杯好咖啡</span>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="subtitle">一份给咖啡爱好者的极简指南</div>
+    <div class="spacer"></div>
+    <div class="tags">
+      <span class="tag">咖啡文化</span>
+      <span class="tag">手冲入门</span>
+      <span class="tag">风味探索</span>
+    </div>
+    <div class="page-num">1/7</div>
+  </div>
+
+  <!-- Slide 2: 咖啡带 -->
+  <div class="slide light">
+    <h2 class="title-main">全球咖啡产区</h2>
+    <div class="accent-bar"></div>
+    <div class="text-block" style="margin-bottom:16px;">
+      <p>世界上所有优质咖啡，都生长在南北回归线之间的<strong>"咖啡带"</strong>上。</p>
+    </div>
+    <div class="card-grid">
+      <div class="card-item">
+        <span class="card-title">非洲 / 埃塞俄比亚</span>
+        花香、莓果、柑橘——咖啡的故乡，风味最丰富
+      </div>
+      <div class="card-item">
+        <span class="card-title">中南美 / 哥伦比亚</span>
+        坚果、焦糖、巧克力——均衡醇厚的经典代表
+      </div>
+      <div class="card-item">
+        <span class="card-title">亚太 / 印尼</span>
+        草本、香料、烟熏——厚重沉稳的深色风味
+      </div>
+    </div>
+    <div class="page-num">2/7</div>
+  </div>
+
+  <!-- Slide 3: 处理法 -->
+  <div class="slide dark">
+    <h2 class="title-main">三大处理法</h2>
+    <div class="accent-bar"></div>
+    <div class="text-block" style="margin-bottom:8px;">
+      <p>咖啡樱桃采摘后的处理方式，<strong>决定了最终风味的 50%</strong>。</p>
+    </div>
+    <table class="mapping-table">
+      <tr>
+        <td class="mapping-key">水洗</td>
+        <td class="mapping-val">干净、明亮、酸质突出，适合浅烘</td>
+      </tr>
+      <tr>
+        <td class="mapping-key">日晒</td>
+        <td class="mapping-val">发酵感、果味浓郁、甜感强烈</td>
+      </tr>
+      <tr>
+        <td class="mapping-key">蜜处理</td>
+        <td class="mapping-val">介于两者之间，甜度高、体感好</td>
+      </tr>
+    </table>
+    <div class="highlight-box">
+      同一产区的豆子，换一种处理法，风味可以天差地别。
+    </div>
+    <div class="page-num">3/7</div>
+  </div>
+
+  <!-- Slide 4: 烘焙度 -->
+  <div class="slide light">
+    <h2 class="title-main">烘焙的光谱</h2>
+    <div class="accent-bar"></div>
+    <div class="text-block" style="margin-bottom:16px;">
+      <p>烘焙度不是"深的好"或"浅的好"，而是<strong>不同风味取向</strong>。</p>
+    </div>
+    <div class="card-grid">
+      <div class="card-item">
+        <span class="card-title">浅烘</span>
+        保留产地风土，花果酸香明显，适合手冲
+      </div>
+      <div class="card-item">
+        <span class="card-title">中烘</span>
+        酸甜平衡，坚果和焦糖调性，万金油选择
+      </div>
+      <div class="card-item">
+        <span class="card-title">深烘</span>
+        苦甜为主，烟熏巧克力调，适合意式浓缩
+      </div>
+    </div>
+    <div class="page-num">4/7</div>
+  </div>
+
+  <!-- Slide 5: 手冲步骤 -->
+  <div class="slide dark">
+    <h2 class="title-main">手冲四步法</h2>
+    <div class="accent-bar"></div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>磨豆</strong>
+          中细研磨，像砂糖颗粒。比例 1:15（15g 豆 : 225ml 水）
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>闷蒸</strong>
+          92°C 热水注入 30ml，等待 30 秒，让 CO2 释放
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>注水</strong>
+          从中心画小圆向外注水，保持水流稳定均匀
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>收尾</strong>
+          总萃取时间控制在 2:00-2:30，及时移开滤杯
+        </div>
+      </div>
+    </div>
+    <div class="page-num">5/7</div>
+  </div>
+
+  <!-- Slide 6: 风味轮 -->
+  <div class="slide light">
+    <h2 class="title-main">如何描述风味？</h2>
+    <div class="accent-bar"></div>
+    <div class="text-block" style="margin-bottom:16px;">
+      <p>用<strong>SCA 风味轮</strong>的语言，训练你的味觉记忆。</p>
+    </div>
+    <table class="mapping-table">
+      <tr>
+        <td class="mapping-key">酸质</td>
+        <td class="mapping-val">柑橘、苹果、莓果——明亮还是柔和？</td>
+      </tr>
+      <tr>
+        <td class="mapping-key">甜感</td>
+        <td class="mapping-val">蜂蜜、焦糖、黑糖——入口还是回甘？</td>
+      </tr>
+      <tr>
+        <td class="mapping-key">体感</td>
+        <td class="mapping-val">轻盈如茶 or 厚重如奶——口腔触感</td>
+      </tr>
+      <tr>
+        <td class="mapping-key">余韵</td>
+        <td class="mapping-val">巧克力、坚果、花香——吞咽后留下什么？</td>
+      </tr>
+    </table>
+    <div class="highlight-box">
+      没有"正确答案"，你尝到什么，它就是什么。
+    </div>
+    <div class="page-num">6/7</div>
+  </div>
+
+  <!-- Slide 7: 结尾 -->
+  <div class="slide dark slide-ending">
+    <div class="spacer"></div>
+    <div class="final-text">
+      每一杯咖啡<br>都是一次微型旅行
+    </div>
+    <div class="small-muted">从种子到杯子，跨越赤道与时区<br>最终抵达你的味蕾</div>
+    <div class="spacer"></div>
+    <div class="footer"></div>
+    <div class="page-num">7/7</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script>
+    const SCALE = 2;
+
+    async function renderSlide(slide) {
+      return html2canvas(slide, {
+        scale: SCALE, useCORS: true, backgroundColor: null,
+        width: 540, height: 675, logging: false,
+      });
+    }
+
+    function canvasToBlob(canvas) {
+      return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    }
+
+    async function downloadOne() {
+      const slides = document.querySelectorAll('.slide');
+      const viewportCenter = window.innerHeight / 2;
+      let closest = 0, minDist = Infinity;
+      slides.forEach((s, i) => {
+        const rect = s.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - viewportCenter);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      const slide = slides[closest];
+      if (!slide) return;
+      const progress = document.getElementById('progress');
+      progress.textContent = '渲染中...';
+      try {
+        const canvas = await renderSlide(slide);
+        const blob = await canvasToBlob(canvas);
+        const num = String(closest + 1).padStart(2, '0');
+        const fileBase = (document.title || 'cards').replace(/[\\/:*?"<>|]+/g, '-');
+        saveAs(blob, `${fileBase}-${num}.png`);
+        progress.textContent = `第 ${closest + 1} 张已下载`;
+      } catch (e) {
+        console.error(e);
+        progress.textContent = '下载失败';
+      }
+    }
+
+    async function downloadAll() {
+      const slides = document.querySelectorAll('.slide');
+      const progress = document.getElementById('progress');
+      const zip = new JSZip();
+      const total = slides.length;
+      const fileBase = (document.title || 'cards').replace(/[\\/:*?"<>|]+/g, '-');
+      for (let i = 0; i < total; i++) {
+        progress.textContent = `渲染第 ${i + 1}/${total} 张...`;
+        try {
+          const canvas = await renderSlide(slides[i]);
+          const blob = await canvasToBlob(canvas);
+          const num = String(i + 1).padStart(2, '0');
+          zip.file(`${fileBase}-${num}.png`, blob);
+        } catch (e) {
+          console.error(e);
+          progress.textContent = `第 ${i + 1} 张渲染失败，跳过`;
+          await new Promise(r => setTimeout(r, 500));
+        }
+      }
+      progress.textContent = '打包 ZIP 中...';
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      saveAs(zipBlob, `${fileBase}-系列卡片.zip`);
+      progress.textContent = `${total} 张图片已打包下载`;
+    }
+
+    async function downloadLongImage() {
+      const progress = document.getElementById('progress');
+      const fileBase = (document.title || 'cards').replace(/[\\/:*?"<>|]+/g, '-');
+      const slides = document.querySelectorAll('.slide');
+      const totalHeight = slides.length * 675;
+      progress.textContent = '渲染长图中...';
+      try {
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = 540 * SCALE;
+        finalCanvas.height = totalHeight * SCALE;
+        const ctx = finalCanvas.getContext('2d');
+        for (let i = 0; i < slides.length; i++) {
+          progress.textContent = `合成第 ${i + 1}/${slides.length} 张...`;
+          const canvas = await renderSlide(slides[i]);
+          ctx.drawImage(canvas, 0, i * 675 * SCALE);
+        }
+        const blob = await canvasToBlob(finalCanvas);
+        saveAs(blob, `${fileBase}-长图.png`);
+        progress.textContent = '长图已下载';
+      } catch (e) {
+        console.error(e);
+        progress.textContent = '长图下载失败';
+      }
+    }
+  </script>
+</body>
+</html>
