@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════╗
+  ║   联名合作方案模板 — html-visual-toolkit 兼容版        ║
+  ║   基于 light 配色 + --accent-secondary 扩展           ║
+  ║   切换主题：替换 :root 块即可（见 html-visual-toolkit） ║
+  ╚═══════════════════════════════════════════════════════╝
+
+  占位符（搜索替换）：
+  {{我方名称}}       对外的产品/品牌名
+  {{对方名称}}       合作品牌名
+  {{合作季度}}       e.g. 2026 Q2
+  {{合作历史}}       e.g. 双方渊源已久，很高兴延续合作。
+  {{合作背景}}       e.g. 同属辐射正版 IP 生态 · 受众高度重叠
+  {{指标1数字}}      e.g. 1.5w
+  {{指标1标签}}      e.g. 游戏周活跃用户
+  {{指标1补充}}      e.g. 稳定核心玩家群体
+  {{指标2数字}}
+  {{指标2标签}}
+  {{指标2补充}}
+  {{指标3数字}}
+  {{指标3标签}}
+  {{指标3补充}}
+  {{额外渠道名}}     e.g. 官方直购商城（无额外渠道则删掉 asset-card-wide 整块）
+  {{额外渠道特性1~3}}
+  {{合作逻辑说明}}   e.g. 对方提供周边奖品，我方提供渠道曝光
+  {{合作逻辑核心}}   e.g. 奖品规模决定合作档位，档位决定我们能开放的资源范围
+  {{基础档门槛}}     e.g. 服饰 / 包 ≥ 3 件
+  {{标准档门槛}}     e.g. 服饰 / 包 ≥ 10 件
+  {{档位注释}}       e.g. 徽章、袜子等小件不计入档位门槛
+  {{回复期限}}       e.g. 5 个工作日内
+  {{活动季度}}       e.g. 2026 Q2
+  {{出品方}}         e.g. XX 运营团队
+  {{LOGO路径}}       本地路径（无logo则删掉 .topbar 整块）
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{我方名称}} × {{对方名称}} 联名合作方案</title>
+  <style>
+    /* ══════════════════════════════════════════
+       Theme: light + accent-secondary 扩展
+       替换此 :root 块即可切换至其他主题
+       （dark-gold / tech / warm / nature / bold）
+    ══════════════════════════════════════════ */
+    :root {
+      /* === light 主题（html-visual-toolkit 标准）=== */
+      --bg-body:           #ffffff;
+      --bg-slide-dark:     #2c2c2c;
+      --bg-slide-light:    #ffffff;
+      --accent:            #2b6cb0;
+      --text-dark:         #f0f0f0;
+      --text-light:        #1a1a1a;
+      --text-dark-muted:   rgba(240,240,240,0.5);
+      --text-light-muted:  #6b7280;
+      --bg-chrome:         #ffffff;
+      --bg-chrome-hover:   #f0f0f0;
+      --border-chrome:     #e0e0e0;
+      --text-chrome:       #1a1a1a;
+      --text-chrome-muted: #6b7280;
+      --font-stack:        -apple-system,'PingFang SC','Helvetica Neue','Noto Sans SC',sans-serif;
+
+      /* === 扩展变量（proposal 模板专用）=== */
+      --accent-secondary:  #F5C518;  /* 第二强调色，用于点缀/badge/icon */
+      --bg-card:           #F0F6FB;
+      --border-card:       #D0E2EE;
+      --text-body:         #3A5A7A;
+      --text-muted:        #9ABACC;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg-body);
+      color: var(--text-light);
+      padding: 48px 0;
+    }
+
+    .page { max-width: 800px; margin: 0 auto; padding: 0 52px; }
+
+    /* ── Header ── */
+    .header { border-bottom: 2px solid var(--accent); padding-bottom: 32px; margin-bottom: 44px; }
+
+    .tag {
+      display: inline-block; font-size: 11px; letter-spacing: 3px;
+      color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
+    }
+
+    h1 { font-size: 30px; font-weight: 700; color: var(--text-light); line-height: 1.3; margin-bottom: 10px; }
+    h1 span { color: var(--accent); }
+
+    .collab-history { font-size: 13px; color: var(--text-body); line-height: 1.8; margin-bottom: 10px; }
+    .subtitle { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 44px; }
+
+    .section-title {
+      font-size: 11px; letter-spacing: 3px; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-card); }
+
+    /* ── 渠道资源 ── */
+    .asset-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+
+    .asset-card {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-top: 3px solid var(--accent-secondary); padding: 20px 22px;
+    }
+
+    .asset-num { font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .asset-label { font-size: 12px; color: var(--text-body); letter-spacing: 1px; }
+    .asset-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+    .asset-card-wide {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-top: 3px solid var(--accent);
+      padding: 18px 24px; display: flex; align-items: flex-start; gap: 28px;
+    }
+
+    .wide-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px; margin-bottom: 4px; white-space: nowrap; }
+    .wide-sub { font-size: 11px; color: var(--text-muted); }
+    .wide-features { display: flex; gap: 24px; flex-wrap: wrap; }
+
+    .wide-feature { font-size: 13px; color: var(--text-body); display: flex; align-items: center; gap: 6px; }
+    .wide-feature::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--accent-secondary); flex-shrink: 0; }
+
+    /* ── 合作逻辑 ── */
+    .intro-text {
+      font-size: 14px; color: var(--text-body); line-height: 2;
+      background: #FFFBEE; padding: 16px 16px 16px 20px;
+      border-left: 3px solid var(--accent-secondary);
+    }
+
+    .intro-text strong { color: var(--text-light); }
+
+    /* ── Tier cards ── */
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    .tier-card { background: var(--bg-card); border: 1px solid var(--border-card); display: flex; flex-direction: column; }
+    .tier-card.featured { border-color: var(--accent); border-width: 2px; }
+
+    .tier-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border-card); }
+    .tier-card.featured .tier-header { background: #EBF3FA; }
+
+    .tier-name { font-size: 13px; font-weight: 700; color: var(--text-light); letter-spacing: 1px; margin-bottom: 6px; }
+    .tier-card.featured .tier-name { color: var(--accent); }
+
+    .tier-threshold { font-size: 11px; color: var(--text-muted); }
+    .tier-threshold strong { color: var(--accent); font-size: 18px; font-weight: 700; }
+
+    .tier-body { padding: 16px 20px; flex: 1; }
+
+    .tier-item {
+      font-size: 13px; color: var(--text-body); line-height: 1.8;
+      padding: 5px 0; border-bottom: 1px solid var(--border-card);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+
+    .tier-item:last-child { border-bottom: none; }
+    .tier-item::before { content: "›"; color: var(--accent-secondary); flex-shrink: 0; font-size: 16px; font-weight: 700; }
+
+    .tier-badge {
+      display: inline-block; font-size: 10px; background: var(--accent-secondary);
+      color: var(--text-light); padding: 1px 6px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px;
+    }
+
+    /* ── req-list（合作说明 / 下一步共用）── */
+    .req-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .req-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--bg-card); border: 1px solid var(--border-card); padding: 14px 18px;
+    }
+
+    .req-num {
+      min-width: 22px; height: 22px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .req-content { font-size: 13px; color: var(--text-body); line-height: 1.7; }
+    .req-content strong { color: var(--text-light); display: block; margin-bottom: 2px; font-size: 14px; }
+
+    .note { font-size: 12px; color: var(--text-muted); line-height: 1.8; margin-top: 12px; padding-left: 4px; }
+
+    /* ── Logo 右上角（可选）── */
+    .topbar { position: fixed; top: 0; right: 0; padding: 14px 24px; z-index: 100; }
+    .logo-corner { height: 36px; display: block; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 52px; padding-top: 20px; border-top: 1px solid var(--border-card);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .footer-left, .footer-right { font-size: 12px; color: var(--text-muted); }
+
+    @media print {
+      body { background: var(--bg-body); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .topbar { position: absolute; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo 右上角（无logo则删掉此块）-->
+  <div class="topbar">
+    <img src="{{LOGO路径}}" class="logo-corner" alt="logo">
+  </div>
+
+  <div class="page">
+
+    <div class="header">
+      <div class="tag">Brand Collaboration · {{合作季度}}</div>
+      <h1>{{我方名称}} × <span>{{对方名称}}</span><br>联名合作方案</h1>
+      <div class="collab-history">{{合作历史}}</div>
+      <div class="subtitle">{{合作背景}}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">{{我方名称}} 渠道资源</div>
+      <div class="asset-row">
+        <div class="asset-card">
+          <div class="asset-num">{{指标1数字}}</div>
+          <div class="asset-label">{{指标1标签}}</div>
+          <div class="asset-sub">{{指标1补充}}</div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-num">{{指标2数字}}</div>
+          <div class="asset-label">{{指标2标签}}</div>
+          <div class="asset-sub">{{指标2补充}}</div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-num">{{指标3数字}}</div>
+          <div class="asset-label">{{指标3标签}}</div>
+          <div class="asset-sub">{{指标3补充}}</div>
+        </div>
+      </div>
+      <!-- 额外渠道（无则删掉此块）-->
+      <div class="asset-card-wide">
+        <div>
+          <div class="wide-title">{{额外渠道名}}</div>
+          <div class="wide-sub">额外合作渠道</div>
+        </div>
+        <div class="wide-features">
+          <div class="wide-feature">{{额外渠道特性1}}</div>
+          <div class="wide-feature">{{额外渠道特性2}}</div>
+          <div class="wide-feature">{{额外渠道特性3}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">合作逻辑</div>
+      <div class="intro-text">
+        {{合作逻辑说明}}<br>
+        <strong>{{合作逻辑核心}}</strong>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">合作档位</div>
+      <div class="tier-grid">
+
+        <div class="tier-card">
+          <div class="tier-header">
+            <div class="tier-name">基础档</div>
+            <div class="tier-threshold">{{基础档门槛}}</div>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item"><!-- 基础档权益1 --></div>
+            <div class="tier-item"><!-- 基础档权益2 --></div>
+          </div>
+        </div>
+
+        <div class="tier-card featured">
+          <div class="tier-header">
+            <div class="tier-badge">推荐</div>
+            <div class="tier-name">标准档</div>
+            <div class="tier-threshold">{{标准档门槛}}</div>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item"><!-- 标准档权益1 --></div>
+            <div class="tier-item"><!-- 标准档权益2 --></div>
+            <div class="tier-item"><!-- 标准档权益3 --></div>
+          </div>
+        </div>
+
+        <div class="tier-card">
+          <div class="tier-header">
+            <div class="tier-name">深度档</div>
+            <div class="tier-threshold">定制联名 / 另行洽谈</div>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item">以上全部</div>
+            <div class="tier-item"><!-- 深度档专属权益1 --></div>
+            <div class="tier-item"><!-- 深度档专属权益2 --></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="note">* {{档位注释}}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">合作说明</div>
+      <div class="req-list">
+        <div class="req-item">
+          <div class="req-num">1</div>
+          <div class="req-content">
+            <strong>活动前：确认奖品清单</strong>
+            提供可参与活动的品类、件数及图片素材，活动上线前 7 日完成对齐
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-num">2</div>
+          <div class="req-content">
+            <strong>活动中：品牌方直接发货</strong>
+            获奖用户信息由我方提供，品牌方直接向用户寄送
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-num">3</div>
+          <div class="req-content">
+            <strong>内容使用：遵守 IP 规范</strong>
+            活动涉及 IP 视觉素材，双方确认符合各自版权授权范围
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-num">4</div>
+          <div class="req-content">
+            <strong>IP 授权有效期确认</strong>
+            请提供 IP 授权截止日期，确保授权覆盖完整活动周期（含发货及传播阶段）
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">下一步</div>
+      <div class="req-list">
+        <div class="req-item">
+          <div class="req-num">1</div>
+          <div class="req-content">
+            <strong>确认参与档位</strong>
+            请根据可提供的品类和数量，确认基础档或标准档
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-num">2</div>
+          <div class="req-content">
+            <strong>提供货单</strong>
+            列明可参与活动的品类、件数及产品图，以便我方规划活动形式
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-num">3</div>
+          <div class="req-content">
+            <strong>预期推进时间</strong>
+            计划于 {{活动季度}} 内落地，请于收到方案后 <strong style="color:var(--accent);">{{回复期限}}</strong> 回复意向
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">{{出品方}}</div>
+      <div class="footer-right">{{合作季度}} · 联名合作提案</div>
+    </div>
+
+  </div>
+</body>
+</html>
