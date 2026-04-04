@@ -12,3 +12,4 @@
 - `knowledge/four-layer-memory.md` — 四层记忆系统：L0原则→L1跨项目→L2项目→L3工作记忆 + 置信度体系
 - `knowledge/evoskill.md` — EvoSkill：三Agent进化循环自动发现可复用Skill（C4待审阅）
 - `knowledge/skill-type-and-agent-engineering.md` — Skill 格式三分类（纯MD/MD+代码/脚本为主）+ Citadel 改造为 agent 工程构建工具的分析与方案
+- `knowledge/routa-multi-agent-patterns.md` — Routa 多Agent协作模式：角色分离/状态外化/Done Reporter 强制收尾 + v0.12.1 变更
