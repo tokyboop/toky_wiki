@@ -15,3 +15,8 @@
 - `knowledge/routa-multi-agent-patterns.md` — Routa 多Agent协作模式：角色分离/状态外化/Done Reporter 强制收尾 + v0.12.1 变更
 - `knowledge/script-skill-agent-priority.md` — 脚本→Skill→Agent优先级决策框架：判断标准、金字塔模型、常见错误
 - `knowledge/content-creation-skill-methodology.md` — 内容创作Skill构建方法论：4步迭代流程 + 四层自检体系 + AI辅助正确姿势
+- `knowledge/three-dept-six-ministry-agent-pattern.md` — 三省六部制多Agent架构：中书起草→门下审议→尚书执行+六部并行，附多模型圆桌变体
+- `knowledge/claude-code-auto-dream.md` — Auto Dream机制：触发条件/四步整理流程/四层记忆架构完整版，含安全边界与实测数据
+- `knowledge/skill-creator-eval-system.md` — Skill-creator新版四大能力：评估/基准测试/并行测试/描述调优，含两种Skill类型评估方向
+- `knowledge/essential-skills-catalog.md` — 必装6个Skills精选：Frontend Design/办公四件套/Web Access/PUA/Claude-mem/Skill-Creator，含叠加组合
+- `knowledge/skill-security-vetting.md` — Skill安全审查：Skill Vetter使用指南，3步审查流程/红线清单/风险等级，含镜像站风险警告
