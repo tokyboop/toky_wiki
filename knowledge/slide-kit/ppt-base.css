@@ -1,0 +1,89 @@
+/*
+ * ppt-base.css — 结构样式
+ * 工具栏 / 侧边栏 / 演示层 / 概览层 / Slide 基础
+ * 配合 ppt-runtime.js 使用
+ *
+ * 主题变量由各 HTML 文件的 :root 提供：
+ *   --bg-body / --bg-slide-dark / --bg-slide-light
+ *   --accent / --text-dark / --text-dark-muted
+ *   --text-light / --text-light-muted
+ *   --bg-chrome / --bg-chrome-hover / --border-chrome
+ *   --text-chrome / --text-chrome-muted
+ *   --font-stack / --sidebar-w / --transition-speed
+ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg-body); font-family: var(--font-stack); color: var(--text-chrome); display: flex; flex-direction: column; }
+h1, h2, h3, h4 { margin: 0; font-weight: 700; }
+p { margin: 0; }
+
+/* ── 工具栏 ── */
+.toolbar { height: 48px; background: var(--bg-chrome); display: flex; align-items: center; padding: 0 16px; gap: 10px; border-bottom: 1px solid var(--border-chrome); flex-shrink: 0; z-index: 100; }
+.toolbar .spacer { flex: 1; }
+.tb-btn { padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; }
+.tb-btn-primary { background: var(--accent); color: #fff; }
+.tb-btn-primary:hover { opacity: 0.85; }
+.tb-btn-default { background: var(--bg-chrome-hover); color: var(--text-chrome-muted); border: 1px solid var(--border-chrome); }
+.tb-btn-default:hover { background: var(--border-chrome); color: var(--text-chrome); }
+.tb-title { font-size: 13px; font-weight: 600; color: var(--text-chrome-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+.tb-counter { font-size: 12px; color: var(--text-chrome-muted); min-width: 60px; text-align: center; }
+.tb-sep { width: 1px; height: 24px; background: var(--border-chrome); }
+.tb-author { font-size: 11px; color: var(--border-chrome); font-weight: 600; letter-spacing: 0.5px; user-select: none; }
+
+/* ── 编辑视图 ── */
+.editor-view { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar { width: var(--sidebar-w); background: var(--bg-chrome); border-right: 1px solid var(--border-chrome); overflow-y: auto; overflow-x: hidden; padding: 16px 12px; flex-shrink: 0; scrollbar-width: thin; scrollbar-color: var(--border-chrome) transparent; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-chrome); border-radius: 2px; }
+.thumb-item { position: relative; cursor: pointer; margin-bottom: 12px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; transition: border-color 0.2s, box-shadow 0.2s; background: var(--bg-chrome-hover); }
+.thumb-item:hover { border-color: var(--border-chrome); }
+.thumb-item.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
+.thumb-inner { width: 100%; aspect-ratio: 16/9; transform-origin: top left; pointer-events: none; }
+.thumb-num { position: absolute; bottom: 4px; left: 8px; font-size: 10px; color: var(--text-chrome-muted); font-weight: 700; }
+
+.main-preview { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; background: var(--bg-body); position: relative; }
+.preview-wrapper { position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.35); border-radius: 8px; overflow: hidden; }
+.nav-zone { position: absolute; top: 0; width: 25%; height: 100%; z-index: 10; cursor: pointer; display: flex; align-items: center; opacity: 0; transition: opacity 0.2s; }
+.nav-zone:hover { opacity: 1; }
+.nav-zone-prev { left: 0; justify-content: flex-start; padding-left: 16px; }
+.nav-zone-next { right: 0; justify-content: flex-end; padding-right: 16px; }
+.nav-zone-icon { width: 40px; height: 40px; border-radius: 50%; background: color-mix(in srgb, var(--bg-chrome) 80%, transparent); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; color: var(--text-chrome-muted); font-size: 18px; font-weight: 700; border: 1px solid var(--border-chrome); }
+
+/* ── Slide 基础 ── */
+.slide { width: 960px; height: 540px; position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 48px 56px; box-sizing: border-box; flex-shrink: 0; }
+.slide.dark { background: var(--bg-slide-dark); color: var(--text-dark); }
+.slide.light { background: var(--bg-slide-light); color: var(--text-light); }
+.slide-page-num { position: absolute; bottom: 16px; right: 24px; font-size: 11px; opacity: 0.2; font-weight: 500; }
+
+/* ── 演示层 ── */
+.present-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9000; justify-content: center; align-items: center; overflow: hidden; }
+.present-overlay.active { display: flex; }
+.present-stage { position: relative; width: 960px; height: 540px; }
+.present-stage .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease; }
+.present-stage[data-transition="slide"] .slide.leaving { transform: translateX(-100%); opacity: 0; }
+.present-stage[data-transition="slide"] .slide.entering { transform: translateX(100%); opacity: 0; }
+.present-stage[data-transition="slide"] .slide.current { transform: translateX(0); opacity: 1; pointer-events: auto; }
+.present-stage[data-transition="slide-rev"] .slide.leaving { transform: translateX(100%); opacity: 0; }
+.present-stage[data-transition="slide-rev"] .slide.entering { transform: translateX(-100%); opacity: 0; }
+.present-stage[data-transition="slide-rev"] .slide.current { transform: translateX(0); opacity: 1; pointer-events: auto; }
+.present-stage[data-transition="fade"] .slide.leaving { opacity: 0; }
+.present-stage[data-transition="fade"] .slide.current { opacity: 1; pointer-events: auto; }
+.present-stage[data-transition="zoom"] .slide.leaving { transform: scale(0.8); opacity: 0; }
+.present-stage[data-transition="zoom"] .slide.entering { transform: scale(1.2); opacity: 0; }
+.present-stage[data-transition="zoom"] .slide.current { transform: scale(1); opacity: 1; pointer-events: auto; }
+.present-stage[data-transition="none"] .slide.current { opacity: 1; pointer-events: auto; }
+.present-progress { position: fixed; bottom: 0; left: 0; height: 3px; background: var(--accent); z-index: 9001; transition: width 0.3s ease; }
+.present-counter { position: fixed; bottom: 12px; right: 20px; font-size: 13px; color: rgba(255,255,255,0.2); z-index: 9001; }
+.present-overlay.hide-cursor, .present-overlay.hide-cursor * { cursor: none; }
+
+/* ── 概览层 ── */
+.overview-overlay { display: none; position: fixed; inset: 0; background: color-mix(in srgb, var(--bg-body) 95%, transparent); z-index: 8000; overflow-y: auto; padding: 40px; }
+.overview-overlay.active { display: block; }
+.overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1400px; margin: 0 auto; }
+.overview-item { cursor: pointer; border-radius: 8px; overflow: hidden; border: 3px solid transparent; transition: border-color 0.2s, transform 0.2s; position: relative; background: var(--bg-chrome); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.overview-item:hover { border-color: var(--border-chrome); transform: translateY(-4px); }
+.overview-item.active { border-color: var(--accent); }
+.overview-item-inner { width: 100%; aspect-ratio: 16/9; transform-origin: top left; pointer-events: none; position: relative; overflow: hidden; }
+.overview-num { position: absolute; top: 8px; left: 10px; background: rgba(0,0,0,0.5); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
