@@ -20,3 +20,4 @@
 - `knowledge/skill-creator-eval-system.md` — Skill-creator新版四大能力：评估/基准测试/并行测试/描述调优，含两种Skill类型评估方向
 - `knowledge/essential-skills-catalog.md` — 必装6个Skills精选：Frontend Design/办公四件套/Web Access/PUA/Claude-mem/Skill-Creator，含叠加组合
 - `knowledge/skill-security-vetting.md` — Skill安全审查：Skill Vetter使用指南，3步审查流程/红线清单/风险等级，含镜像站风险警告
+- `knowledge/indie-game-first-project-pitfalls.md` — 新手独立游戏第一作的 4 条结构性陷阱（从 4 篇真人 devlog 蒸馏：参照锚点/重来预算/目标分层/技术热点错位）
